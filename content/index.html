@@ -1,79 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Live Flight Data Map</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
 
-    <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
-    <link
-      rel="stylesheet"
-      href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css"
-      type="text/css"
-    />
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-   <!-- <script src="https://unpkg.com/@aspnet/signalr@1.0.2/dist/browser/signalr.js"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+<head>
+  <title>Live Flight Data Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <!-- Add a reference to the Azure Maps Services Module JavaScript file. -->
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
-<script>
-function GetMap() {
-        //Add Map Control JavaScript code here.
-var map = new atlas.Map("myMap", {
-  //Add your Azure Maps subscription key to the map SDK. Get an Azure Maps key at https://azure.com/maps
-    authOptions: {
-    authType: "subscriptionKey",
-    subscriptionKey: "2Xi2YAbxLSzp83ZIc_JDsxqxJ_FQsuIhV0MLlVkEOA0",
-  },
-  style: "night",
-center: [12.56738,41.87194],
-zoom: 5
+  <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+  <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+  <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+  <!-- <script src="https://unpkg.com/@aspnet/signalr@1.0.2/dist/browser/signalr.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
 
-});
+  <!-- Add a reference to the Azure Maps Services Module JavaScript file. -->
+  <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
+  <script>
+    function GetMap() {
+      //Add Map Control JavaScript code here.
+      var map = new atlas.Map("myMap", {
+        //Add your Azure Maps subscription key to the map SDK. Get an Azure Maps key at https://azure.com/maps
+        authOptions: {
+          authType: "subscriptionKey",
+          subscriptionKey: "2Xi2YAbxLSzp83ZIc_JDsxqxJ_FQsuIhV0MLlVkEOA0",
+        },
+        style: "night",
+        center: [12.56738, 41.87194],
+        zoom: 5
 
-    
-      
-map.events.add("ready", function () {
-//map.imageSprite.createFromTemplate('plane-icon', 'triangle-arrow-up')
-  //map.imageSprite.add(<img id='plane-icon' src='https://liveunibo-my.sharepoint.com/personal/generoso_longo_studio_unibo_it/_layouts/15/embed.aspx?UniqueId=aff52175-4de5-4381-ae61-80f03936302c' />)
-map.imageSprite.createFromTemplate('plane-icon', 'triangle-arrow-up')
-  //Create a data source and add it to the map
-datasource = new atlas.source.DataSource();
-map.sources.add(datasource);
+      });
 
 
+
+      map.events.add("ready", function () {
+        //map.imageSprite.createFromTemplate('plane-icon', 'triangle-arrow-up')
+        //map.imageSprite.add('plane-icon','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKemqAITfXlc1tTnzhgUA7vV98f6hGV_EMtQ&usqp=CAU')
+        //map.imageSprite.createFromTemplate('plane-icon', 'triangle-arrow-up')
+        //Create a data source and add it to the map
+        map.imageSprite.createFromTemplate('myTemplatedIcon', 'triangle-arrow-up', 'teal', '#fff')
 
 //Add a symbol layer that uses the custom created icon.
-map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
-      iconOptions: {
-        ignorePlacement: true,
-        allowOverlap: true,
-        image: "plane-icon",
-        size: 0.08,
-        rotation: ["get", "rotation"],
-      },
-      textOptions: {
-        textField: [
-          "concat",
-          ["to-string", ["get", "name"]],
-          "- ",
-          ["get", "altitude"],
-        ],
-        color: "#FFFFFF",
-        offset: [2, 0],
-      },
-    }));
+
+        datasource = new atlas.source.DataSource();
+        map.sources.add(datasource);
+
+
+        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
+          iconOptions: {
+              image: 'myTemplatedIcon',
+              ignorePlacement: true,
+              allowOverlap: true,
+              size: 1,
+              rotation: ["get", "rotation"],
+          },
+          textOptions: {
+            textField: [
+              "concat",
+              ["to-string", ["get", "name"]],
+              "- ",
+              ["get", "altitude"],
+            ],
+            color: "#FFFFFF",
+            offset: [2, 0],
+          },
+        }));
+
+        
+        //Add a symbol layer that uses the custom created icon.
+/*        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
+          iconOptions: {
+            ignorePlacement: true,
+            allowOverlap: true,
+            image: "plane-icon",
+            size: 0.08,
+            rotation: ["get", "rotation"],
+          },
+          textOptions: {
+            textField: [
+              "concat",
+              ["to-string", ["get", "name"]],
+              "- ",
+              ["get", "altitude"],
+            ],
+            color: "#FFFFFF",
+            offset: [2, 0],
+          },
+        }));
+*/
 
 
 
-
-      let messages = document.querySelector('#messages');
-      const apiBaseUrl = window.location.origin;
-      const connection = new signalR.HubConnectionBuilder()
+        let messages = document.querySelector('#messages');
+        const apiBaseUrl = window.location.origin;
+        const connection = new signalR.HubConnectionBuilder()
           .withUrl(apiBaseUrl + '/api')
           .configureLogging(signalR.LogLevel.Information)
           .build();
@@ -81,75 +99,78 @@ map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
           document.getElementById("messages").innerHTML = message;
         });
   */
-  connection.on('newMessage',ProcessFlightData )
-  
-  connection.start().catch(console.error);
+        connection.on('newMessage', ProcessFlightData)
+
+        connection.start().catch(console.error);
 
 
 
 
 
-});
+      });
 
 
 
-}
+    }
 
-let datasource;
-let planes = [];
+    let datasource;
+    let planes = [];
 
-function ProcessFlightData(flight) {
-
-
-len=flight.length-1
-for (let i = 0; i < len; i++) {
- f=flight[i] 
- 
- var newFlightPin = new atlas.Shape(
-    new atlas.data.Point([f[6], f[7]]),
-    f[1]
-  );
-  
-  
-  newFlightPin.addProperty("name", f[2]);
-  newFlightPin.addProperty("altitude", f[8]);
-  newFlightPin.addProperty("rotation", f[11]);
-
-  planes[f[1]] = newFlightPin;
-  }
-  datasource.setShapes(Object.values(planes));
+    function ProcessFlightData(flight) {
 
 
-document.getElementById("messages").innerHTML = flight[len];
+      len = flight.length - 1
+      console.log(len)
+      for (let i = 0; i < len; i++) {
+        f = flight[i]
+
+        var newFlightPin = new atlas.Shape(
+          new atlas.data.Point([f[6], f[7]]),
+          f[1]
+        );
 
 
-}
+        newFlightPin.addProperty("name", f[2]);
+         newFlightPin.addProperty("altitude", f[8]);
+        newFlightPin.addProperty("rotation", f[11]);
 
-
-
-
-
-
-    </script>
-
-    <style>
-      html,
-      body {
-        width: 80%;
-        height: 80%;
-        padding: 0;
-        margin: 0;
+        planes[f[1]] = newFlightPin;
       }
+      datasource.setShapes(Object.values(planes));
 
-      #myMap {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body onload="GetMap()">
-    <div id="myMap"></div>
-    <div id="messages"></div>
-    
-  </body>
+
+      document.getElementById("messages").innerHTML = flight[len];
+
+
+    }
+
+
+
+
+
+
+  </script>
+
+  <style>
+    html,
+    body {
+      width: 80%;
+      height: 80%;
+      padding: 0;
+      margin: 0;
+    }
+
+    #myMap {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body onload="GetMap()">
+  <div id="myMap"></div>
+  <div id="messages"></div>
+
+</body>
+
 </html>
