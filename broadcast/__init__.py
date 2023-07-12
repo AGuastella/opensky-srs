@@ -9,7 +9,7 @@ def main(req: func.HttpRequest,signalRMessages: func.Out[str]) -> func.HttpRespo
     database = 'openskydb'
     username = 'CloudSA2b425ff0'
     password = 'colajanni<3'   
-    driver= '{ODBC Driver 18 for SQL Server}'
+    driver= '{ODBC Driver 17 for SQL Server}'
     select_query="""
 SELECT * FROM livestates WHERE onground=0
 """

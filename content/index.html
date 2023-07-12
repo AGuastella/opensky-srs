@@ -8,19 +8,16 @@
   <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
   <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-  <!-- <script src="https://unpkg.com/@aspnet/signalr@1.0.2/dist/browser/signalr.js"></script>-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
 
   <!-- Add a reference to the Azure Maps Services Module JavaScript file. -->
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
   <script>
-    
-    var map, datasource, popup, symbolLayer;
+
+    var map, datasource, popup, symbolLayer, planes = [];;
 
     function GetMap() {
-      //Add Map Control JavaScript code here.
-       map = new atlas.Map("myMap", {
-        //Add your Azure Maps subscription key to the map SDK. Get an Azure Maps key at https://azure.com/maps
+      map = new atlas.Map("myMap", {
         authOptions: {
           authType: "subscriptionKey",
           subscriptionKey: "2Xi2YAbxLSzp83ZIc_JDsxqxJ_FQsuIhV0MLlVkEOA0",
@@ -34,86 +31,47 @@
 
 
       map.events.add("ready", function () {
-        //map.imageSprite.createFromTemplate('plane-icon', 'triangle-arrow-up')
-        //map.imageSprite.add('plane-icon','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKemqAITfXlc1tTnzhgUA7vV98f6hGV_EMtQ&usqp=CAU')
-        //map.imageSprite.createFromTemplate('plane-icon', 'triangle-arrow-up')
-        //Create a data source and add it to the map
+
         map.imageSprite.createFromTemplate('myTemplatedIcon', 'triangle-arrow-up', 'teal', '#fff')
 
-//Add a symbol layer that uses the custom created icon.
 
         datasource = new atlas.source.DataSource();
         map.sources.add(datasource);
 
-        symbolLayer=new atlas.layer.SymbolLayer(datasource, null, {
+        symbolLayer = new atlas.layer.SymbolLayer(datasource, null, {
           iconOptions: {
-              image: 'myTemplatedIcon',
-              ignorePlacement: true,
-              allowOverlap: true,
-              size: 0.5,
-              rotation: ["get", "rotation"],
+            image: 'myTemplatedIcon',
+            ignorePlacement: true,
+            allowOverlap: true,
+            size: 0.5,
+            rotation: ["get", "rotation"],
           },
-        /*  textOptions: {
-            textField: [
-              "concat",
-              ["to-string", ["get", "name"]],
-              "- ",
-              ["get", "altitude"],
-            ],
-            color: "#FFFFFF",
-            offset: [2, 0],
-          },*/
+
         })
         map.layers.add(symbolLayer);
 
-        
-        //Add a symbol layer that uses the custom created icon.
-/*        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
-          iconOptions: {
-            ignorePlacement: true,
-            allowOverlap: true,
-            image: "plane-icon",
-            size: 0.08,
-            rotation: ["get", "rotation"],
-          },
-          textOptions: {
-            textField: [
-              "concat",
-              ["to-string", ["get", "name"]],
-              "- ",
-              ["get", "altitude"],
-            ],
-            color: "#FFFFFF",
-            offset: [2, 0],
-          },
-        }));
-*/
 
 
-
-        let messages = document.querySelector('#messages');
+        //let messages = document.querySelector('#messages');
         const apiBaseUrl = window.location.origin;
         const connection = new signalR.HubConnectionBuilder()
           .withUrl(apiBaseUrl + '/api')
           .configureLogging(signalR.LogLevel.Information)
           .build();
-        /*connection.on('newMessage', (message) => {
-          document.getElementById("messages").innerHTML = message;
+        popup = new atlas.Popup({
+          position: [0, 0],
+          pixelOffset: [0, -18]
         });
-  */           popup = new atlas.Popup({
-                    position: [0, 0],
-                    pixelOffset: [0, -18]
-                });
         map.events.add('mousemove', closePopup);
         map.events.add('mousemove', symbolLayer, symbolHovered);
         map.events.add('touchstart', symbolLayer, symbolHovered);
+        fetch('https://openskyiu.azurewebsites.net/api/flightlist')
+          .then(response => { return response.json() })
+          .then(res => { ProcessFlightData(res) })
+
+        StartConnection(connection)
 
         connection.on('newMessage', ProcessFlightData)
-
-        connection.start().catch(console.error);
-
-
-
 
 
       });
@@ -121,32 +79,8 @@
 
 
     }
-    async function populate(){
-    //const response=await fetch("https://openskyiu.azurewebsites.net/api/flightlist")
-    //const response=await fetch("")
-    //console.log(response.json())
-    /*fetch('http://localhost:7071/api/flightlist')
-   .then(response => {return response.json()})
-   .then(res =>{ console.log(JSON.stringify(res))})
-    
-  
-  
-  
-    */
-    var req = new XMLHttpRequest(); 
-    var url = "https://openskyiu.azurewebsites.net/api/flightlist";
 
-    req.open('GET', url, true);
-    req.onload  = function() {
-   var jsonResponse = JSON.parse(req.responseText);
-   console.log(jsonResponse)
-   ProcessFlightData(jsonResponse)
-};
-  req.send(null);
-  
-  
-  } 
-    let planes = [];
+
 
     function ProcessFlightData(flight) {
 
@@ -172,8 +106,8 @@
         newFlightPin.addProperty("verticalRate", f[12]);
         newFlightPin.addProperty("velocity", f[10]);
         newFlightPin.addProperty("geoAltitude", f[14]);
-        
-        
+
+
 
         planes[f[1]] = newFlightPin;
       }
@@ -186,18 +120,18 @@
     }
 
     function closePopup() {
-            popup.close();
-        }
+      popup.close();
+    }
 
-      function symbolHovered(e) {
-            //Make sure the event occurred on a shape feature.
-            if (e.shapes && e.shapes.length > 0) {
-                var properties = e.shapes[0].getProperties();
+    function symbolHovered(e) {
+      //Make sure the event occurred on a shape feature.
+      if (e.shapes && e.shapes.length > 0) {
+        var properties = e.shapes[0].getProperties();
 
-                //Update the content and position of the popup.
-                popup.setOptions({
-                    //Create the content of the popup.
-                    content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
+        //Update the content and position of the popup.
+        popup.setOptions({
+          //Create the content of the popup.
+          content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
                       <br>Origin Country: ${properties.originCountry}</br>
                       <br>Last position update: ${properties.lastPosUpdate}</br>
 
@@ -215,17 +149,24 @@
 
                       
                       </div>`
-                      ,
-                    position: e.shapes[0].getCoordinates(),
-                    pixelOffset: [0, -18]
-                });
+          ,
+          position: e.shapes[0].getCoordinates(),
+          pixelOffset: [0, -18]
+        });
 
-                //Open the popup.
-                popup.open(map);
-            }
+        //Open the popup.
+        popup.open(map);
+      }
+    }
+    function StartConnection(connection) {
+            console.log('connecting...')
+            connection.start()
+                .then(function () { console.log('connected!') })
+                .catch(function (err) {
+                    console.error(err)
+                    setTimeout(function () { StartConnection(connection) }, 2000)
+                })
         }
-
-
   </script>
 
   <style>
@@ -244,7 +185,7 @@
   </style>
 </head>
 
-<body onload="GetMap();populate()">
+<body onload="GetMap()">
   <div id="myMap"></div>
   <div id="messages"></div>
 </body>
