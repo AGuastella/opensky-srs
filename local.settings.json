@@ -5,5 +5,10 @@
     "FUNCTIONS_WORKER_RUNTIME": "python",
     "AzureSignalRConnectionString": "Endpoint=https://signalopensky.service.signalr.net;AccessKey=xPgksP3darObBDQJ5/CiL2z8WPYmYUXpJFPiXp0mayo=;Version=1.0;"
   },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*",
+    "CORSCredentials": false
+  },
   "ConnectionStrings": {}
 }

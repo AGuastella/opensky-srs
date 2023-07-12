@@ -5,7 +5,6 @@
   <title>Live Flight Data Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
   <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
   <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
@@ -15,9 +14,12 @@
   <!-- Add a reference to the Azure Maps Services Module JavaScript file. -->
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
   <script>
+    
+    var map, datasource, popup, symbolLayer;
+
     function GetMap() {
       //Add Map Control JavaScript code here.
-      var map = new atlas.Map("myMap", {
+       map = new atlas.Map("myMap", {
         //Add your Azure Maps subscription key to the map SDK. Get an Azure Maps key at https://azure.com/maps
         authOptions: {
           authType: "subscriptionKey",
@@ -43,16 +45,15 @@
         datasource = new atlas.source.DataSource();
         map.sources.add(datasource);
 
-
-        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
+        symbolLayer=new atlas.layer.SymbolLayer(datasource, null, {
           iconOptions: {
               image: 'myTemplatedIcon',
               ignorePlacement: true,
               allowOverlap: true,
-              size: 1,
+              size: 0.5,
               rotation: ["get", "rotation"],
           },
-          textOptions: {
+        /*  textOptions: {
             textField: [
               "concat",
               ["to-string", ["get", "name"]],
@@ -61,8 +62,9 @@
             ],
             color: "#FFFFFF",
             offset: [2, 0],
-          },
-        }));
+          },*/
+        })
+        map.layers.add(symbolLayer);
 
         
         //Add a symbol layer that uses the custom created icon.
@@ -98,7 +100,14 @@
         /*connection.on('newMessage', (message) => {
           document.getElementById("messages").innerHTML = message;
         });
-  */
+  */           popup = new atlas.Popup({
+                    position: [0, 0],
+                    pixelOffset: [0, -18]
+                });
+        map.events.add('mousemove', closePopup);
+        map.events.add('mousemove', symbolLayer, symbolHovered);
+        map.events.add('touchstart', symbolLayer, symbolHovered);
+
         connection.on('newMessage', ProcessFlightData)
 
         connection.start().catch(console.error);
@@ -112,8 +121,30 @@
 
 
     }
+    async function populate(){
+    //const response=await fetch("https://openskyiu.azurewebsites.net/api/flightlist")
+    //const response=await fetch("")
+    //console.log(response.json())
+    /*fetch('http://localhost:7071/api/flightlist')
+   .then(response => {return response.json()})
+   .then(res =>{ console.log(JSON.stringify(res))})
+    
+  
+  
+  
+    */
+    var req = new XMLHttpRequest(); 
+    var url = "http://localhost:7071/api/flightlist";
 
-    let datasource;
+    req.open('GET', url, true);
+    req.onload  = function() {
+   var jsonResponse = JSON.parse(req.responseText);
+   console.log(jsonResponse)
+};
+  req.send(null);
+  
+  
+  } 
     let planes = [];
 
     function ProcessFlightData(flight) {
@@ -128,11 +159,20 @@
           new atlas.data.Point([f[6], f[7]]),
           f[1]
         );
-
+        //id del point=icao24!
 
         newFlightPin.addProperty("name", f[2]);
-         newFlightPin.addProperty("altitude", f[8]);
+        newFlightPin.addProperty("baroAltitude", f[8]);
         newFlightPin.addProperty("rotation", f[11]);
+
+        newFlightPin.addProperty("originCountry", f[3]);
+        newFlightPin.addProperty("lastPosUpdate", f[4]);
+        newFlightPin.addProperty("lastContact", f[5]);
+        newFlightPin.addProperty("verticalRate", f[12]);
+        newFlightPin.addProperty("velocity", f[10]);
+        newFlightPin.addProperty("geoAltitude", f[14]);
+        
+        
 
         planes[f[1]] = newFlightPin;
       }
@@ -144,9 +184,45 @@
 
     }
 
+    function closePopup() {
+            popup.close();
+        }
+
+      function symbolHovered(e) {
+            //Make sure the event occurred on a shape feature.
+            if (e.shapes && e.shapes.length > 0) {
+                var properties = e.shapes[0].getProperties();
+
+                //Update the content and position of the popup.
+                popup.setOptions({
+                    //Create the content of the popup.
+                    content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
+                      <br>Origin Country: ${properties.originCountry}</br>
+                      <br>Last position update: ${properties.lastPosUpdate}</br>
+
+                      <br>Last contact: ${properties.lastContact}</br>
+                      <br>Barometric altitude: ${properties.baroAltitude}</br>
+
+                      <br>Velocity: ${properties.velocity}</br>
+
+                      <br>True Track: ${properties.rotatiion}</br>
+
+                      <br>Vertical Rate: ${properties.verticalRate}</br>
+
+                      <br>Geo Altitude: ${properties.geoAltitude}</br>
 
 
+                      
+                      </div>`
+                      ,
+                    position: e.shapes[0].getCoordinates(),
+                    pixelOffset: [0, -18]
+                });
 
+                //Open the popup.
+                popup.open(map);
+            }
+        }
 
 
   </script>
@@ -167,10 +243,9 @@
   </style>
 </head>
 
-<body onload="GetMap()">
+<body onload="GetMap();populate()">
   <div id="myMap"></div>
   <div id="messages"></div>
-
 </body>
 
 </html>

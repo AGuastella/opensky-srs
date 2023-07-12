@@ -11,7 +11,7 @@ def main(req: func.HttpRequest,signalRMessages: func.Out[str]) -> func.HttpRespo
     password = 'colajanni<3'   
     driver= '{ODBC Driver 18 for SQL Server}'
     select_query="""
-SELECT * FROM liveinfo
+SELECT * FROM livestates WHERE onground=0
 """
     distance_query="""
 SELECT SUM(DISTANCE) FROM LIVEINFO
