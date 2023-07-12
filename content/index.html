@@ -5,6 +5,8 @@
 
   <!-- SCRIPT AGGIUNTO DA MICHELE-->
   <script>
+    const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
+    var formatter = new Intl.DateTimeFormat('it-IT', options);
     var airports = [['LIAA', 'Aeroporto di Terni "Alvaro Leonardi"', 'Terni', 'Terni', 'TR'],
     ['LIAD', 'Capitalia', 'Ponte Galeria', 'Roma', 'RM'],
     ['LIAF', 'Aeroporto di Foligno', 'Foligno', 'Perugia', 'PG'],
@@ -235,8 +237,6 @@
         row.appendChild(cell);
 
         cell = document.createElement("td");
-        const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
-        var formatter = new Intl.DateTimeFormat('it-IT', options);
         //date.getDay()+"/"+date.getMonth()+"/"+ date.getFullYear()+"\n"+date.getHours()+":"+date.getMinutes()
         cellText = document.createTextNode(formatter.format(new Date(json[j].firstSeen * 1000)));
         cell.appendChild(cellText);
@@ -377,10 +377,10 @@
         newFlightPin.addProperty("rotation", f[11]);
 
         newFlightPin.addProperty("originCountry", f[3]);
-        newFlightPin.addProperty("lastPosUpdate", f[4]);
-        newFlightPin.addProperty("lastContact", f[5]);
-        newFlightPin.addProperty("verticalRate", f[12]);
-        newFlightPin.addProperty("velocity", f[10]);
+        newFlightPin.addProperty("lastPosUpdate", formatter.format(new Date(f[4]*1000)));
+        newFlightPin.addProperty("lastContact", formatter.format(new Date(f[5]*1000)));
+        newFlightPin.addProperty("verticalRate", (f[12]*3.6).toFixed(2));
+        newFlightPin.addProperty("velocity", (f[10]*3.6).toFixed(2));
         newFlightPin.addProperty("geoAltitude", f[14]);
 
 
@@ -389,9 +389,8 @@
       }
       datasource.setShapes(Object.values(planes));
 
-
-      document.getElementById("messages").innerHTML = flight[len];
-
+      mess = document.getElementById("messages");
+      mess.innerHTML = "<h1>Total distance travelled: &nbsp&nbsp&nbsp " + (flight[len] / 1000.0).toFixed(3) + " Km</h1>";
 
     }
 
@@ -412,17 +411,13 @@
                       <br>Last position update: ${properties.lastPosUpdate}</br>
 
                       <br>Last contact: ${properties.lastContact}</br>
-                      <br>Barometric altitude: ${properties.baroAltitude}</br>
+                      <br>Barometric altitude: ${properties.baroAltitude} m</br>
 
-                      <br>Velocity: ${properties.velocity}</br>
+                      <br>Velocity: ${properties.velocity} km/h</br>
 
-                      <br>True Track: ${properties.rotation}</br>
+                      <br>Vertical Rate: ${properties.verticalRate} km/h</br>
 
-                      <br>Vertical Rate: ${properties.verticalRate}</br>
-
-                      <br>Geo Altitude: ${properties.geoAltitude}</br>
-
-
+                      <br>Geo Altitude: ${properties.geoAltitude} m</br>
                       
                       </div>`
           ,
@@ -435,14 +430,14 @@
       }
     }
     function StartConnection(connection) {
-            console.log('connecting...')
-            connection.start()
-                .then(function () { console.log('connected!') })
-                .catch(function (err) {
-                    console.error(err)
-                    setTimeout(function () { StartConnection(connection) }, 2000)
-                })
-        }
+      console.log('connecting...')
+      connection.start()
+        .then(function () { console.log('connected!') })
+        .catch(function (err) {
+          console.error(err)
+          setTimeout(function () { StartConnection(connection) }, 2000)
+        })
+    }
   </script>
 
   <style>
@@ -461,9 +456,40 @@
   </style>
 </head>
 
-<body onload="GetMap()">
-  <div id="myMap"></div>
-  <div id="messages"></div>
-</body>
+<body onload="GetMap();createSelect();">
+  <table>
+    <tbody>
+      <tr height="600">
+        <td id="myMap"></td>
+        <td style="vertical-align: top;">
+          <div id="messages"></div>
+          <br>
+          <h1>Statistics by airport</h1>
+          <select id="listAirports"></select>
+          <button type="button" onclick="userAction()">Search</button>
+          <table>
+            <tbody>
+              <tr>
+                <td id="title_de" width="700">
+                </td>
+              </tr>
+              <tr>
+                <td id="departures" width="700" style="vertical-align: top;">
+                </td>
+              </tr>
+              <tr>
+                <td id="title_ar" width="700">
+                </td>
+              </tr>
+              <tr>
+                <td id="arrivals" width="700" style="vertical-align: top;">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
 </html>
