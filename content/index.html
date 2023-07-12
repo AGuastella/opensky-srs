@@ -2,6 +2,280 @@
 <html>
 
 <head>
+
+  <!-- SCRIPT AGGIUNTO DA MICHELE-->
+  <script>
+    var airports = [['LIAA', 'Aeroporto di Terni "Alvaro Leonardi"', 'Terni', 'Terni', 'TR'],
+    ['LIAD', 'Capitalia', 'Ponte Galeria', 'Roma', 'RM'],
+    ['LIAF', 'Aeroporto di Foligno', 'Foligno', 'Perugia', 'PG'],
+    ['LIAL', 'Aviosuperficie Sant\'Illuminato', 'Citta\' di Castello', 'Perugia', 'PG'],
+    ['LIAP', 'Aeroporto di Preturo', 'L\'Aquila', 'L\'Aquila', 'AQ'],
+    ['LIAQ', 'Aeroporto di Aquino', 'Aquino', 'Frosinone', 'FR'],
+    ['LIAR', 'Aeroporto di Furbara', 'Furbara', 'Roma', 'RM'],
+    ['LIAT', 'Aviosuperficie Valdera/Capannoli', 'Capannoli', 'Pisa', 'PI'],
+    ['LIAU', 'Aeroporto di Capua', 'Capua', 'Caserta', 'CE'],
+    ['LIBA', 'Base Aeronautica Amendola', 'Foggia', 'Foggia', 'FG'],
+    ['LIBC', 'Aeroporto di Crotone-Sant\'Anna "Pitagora"', 'Crotone', 'Crotone', 'KR'],
+    ['LIBD', 'Aeroporto "Karol Wojtyla"', 'Bari', 'Bari', 'BA'],
+    ['LIBF', 'Aeroporto "Gino Lisa" di Foggia', 'Foggia', 'Foggia', 'FG'],
+    ['LIBG', 'Aeroporto di Taranto-Grottaglie "Marcello Arlotta"', 'Taranto', 'Taranto', 'TA'],
+    ['LIBH', 'Eliporto Marina di Ginosa', 'Marina di Ginosa', 'Taranto', 'TA'],
+    ['LIBJ', 'Eliporto di Vibo Valentia', 'Vibo Valentia', 'Vibo Valentia', 'VV'],
+    ['LIBN', 'Base Aerea di Galatina', 'Lecce', 'Lecce', 'LE'],
+    ['LIBP', 'Aeroporto internazionale d\'Abruzzo "Pasquale Liberi"', 'Pescara', 'Pescara', 'PE'],
+    ['LIBR', 'Aeroporto del Salento', 'Brindisi', 'Brindisi', 'BR'],
+    ['LIBV', 'Base Aerea di Gioia del Colle', 'Gioia del Colle', 'Bari', 'BA'],
+    ['LIBX', 'Base Aeronautica di Martina Franca', 'Martina Franca', 'Taranto', 'TA'],
+    ['LICA', 'Aeroporto Internazionale di Lamezia Terme', 'Lamezia Terme', 'Catanzaro', 'CZ'],
+    ['LICB', 'Aeroporto di Comiso', 'Comiso', 'Ragusa', 'RG'],
+    ['LICC', 'Aeroporto di Catania-Fontanarossa "Vincenzo Bellini"', 'Catania', 'Catania', 'CT'],
+    ['LICD', 'Aeroporto di Lampedusa', 'Lampedusa', 'Agrigento', 'AG'],
+    ['LICG', 'Aeroporto di Pantelleria', 'Pantelleria', 'Trapani', 'TP'],
+    ['LICJ', 'Aeroporto di Palermo "Falcone e Borsellino"', 'Cinisi', 'Palermo', 'PA'],
+    ['LICP', 'Aeroporto di Palermo-Boccadifalco "Giuseppe e Francesco Notarbartolo"', 'Palermo', 'Palermo', 'PA'],
+    ['LICR', 'Aeroporto dello Stretto "Tito Minniti"', 'Reggio Calabria', 'Reggio Calabria', 'RC'],
+    ['LICT', 'Aeroporto Trapani-Birgi "Vincenzo Florio"', 'Trapani', 'Trapani', 'TP'],
+    ['LICZ', 'Base Aeronavale Sigonella', 'Lentini', 'Siracusa', 'SR'],
+    ['LIDA', 'Aeroporto di Asiago', 'Asiago', 'Vicenza', 'VI'],
+    ['LIDB', 'Aeroporto di Belluno', 'Belluno', 'Belluno', 'BL'],
+    ['LIDC', 'Aeroporto di Ca\' Negra', 'Ca\' Negra', 'Rovigo', 'RO'],
+    ['LIDE', 'Aeroporto di Reggio Emilia', 'Reggio Emilia', 'Reggio Emilia', 'RE'],
+    ['LIDF', 'Aeroporto di Fano', 'Fano', 'Pesaro e Urbino', 'PU'],
+    ['LIDG', 'Aeroporto di Lugo di Romagna', 'Lugo di Romagna', 'Ravenna', 'RA'],
+    ['LIDH', 'Aeroporto di Thiene', 'Thiene', 'Vicenza', 'VI'],
+    ['LIDK', 'Aeroporto di Casarsa "Francesco Baracca"', 'Casarsa della Delizia', 'Pordenone', 'PN'],
+    ['LIDL', 'Aeroporto di Legnago', 'Legnago', 'Verona', 'VE'],
+    ['LIDP', 'Aeroporto di Pavullo nel Frignano "G. Paolucci"', 'Pavullo nel Frignano', 'Modena', 'MO'],
+    ['LIDR', 'Aeroporto di Ravenna', 'Ravenna', 'Ravenna', 'RA'],
+    ['LIDT', 'Aeroporto di Trento-Mattarello "G. Caproni"', 'Trento', 'Trento', 'TN'],
+    ['LIDU', 'Aeroporto di Carpi-Budrione', 'Carpi', 'Modena', 'MO'],
+    ['LIDV', 'Aeroporto di Prati Vecchi d\'Aguscello', 'Ferrara', 'Ferrara', 'FE'],
+    ['LIDW', 'Aviosuperficie "G. Carrer"', 'Salgareda', 'Treviso', 'TV'],
+    ['LIEA', 'Aeroporto Alghero-Fertilia', 'Alghero', 'Sassari', 'SS'],
+    ['LIED', 'Base Aerea di Decimomannu', 'Decimomannu', 'Cagliari', 'CA'],
+    ['LIEE', 'Aeroporto di Cagliari Elmas "Mario Marmelli"', 'Cagliari', 'Cagliari', 'CA'],
+    ['LIEO', 'Aeroporto Olbia Costa Smeralda', 'Olbia', 'Sassari', 'SS'],
+    ['LIER', 'Aeroporto di Oristano-Fenosu', 'Oristano', 'Oristano', 'OR'],
+    ['LIET', 'Aeroporto di Tortoli\'', 'Tortoli\'', 'Nuoro', 'NU'],
+    ['LIKD', 'Aviosuperficie Torraccia', 'Torraccia', 'San Marino', '--'],
+    ['LIKE', 'Aviosuperficie A. Li. Caorle', 'Caorle', 'Venezia', 'VE'],
+    ['LIKH', 'Aviosuperficie Rivoli Avro', 'Rivoli di Osoppo', 'Udine', 'UD'],
+    ['LIKO', 'Aviosuperficie di Ozzano "Guglielmo Zamboni"', 'Ozzano dell\'Emilia', 'Bologna', 'BO'],
+    ['LILA', 'Aeroporto di Alessandria', 'Alessandria', 'Alessandria', 'AL'],
+    ['LILB', 'Aeroporto di Alzate Brianza', 'Como', 'Como', 'CO'],
+    ['LILC', 'Aeroporto di Calcinate del Pesce', 'Varese', 'Varese', 'VA'],
+    ['LILE', 'Aeroporto Cerrione', 'Biella', 'Biella', 'BI'],
+    ['LILF', 'Aviosuperficie Scuola Volo Castelnuovo Don Bosco', 'Castelnuovo Don Bosco', 'Asti', 'AT'],
+    ['LILG', 'Aeroporto di Vergiate', 'Vergiate', 'Varese', 'VA'],
+    ['LILH', 'Aeroporto di Rivanazzano', 'Voghera', 'Pavia', 'PV'],
+    ['LILI', 'Aeroporto di Vercelli "Carlo del Prete"', 'Vercelli', 'Vercelli', 'VC'],
+    ['LILM', 'Aeroporto di Casale Monferrato', 'Casale Monferrato', 'Alessandria', 'AL'],
+    ['LILN', 'Aeroporto di Varese-Venegono', 'Varese', 'Varese', 'VA'],
+    ['LILO', 'Aviosuperficie di Caiolo', 'Caiolo', 'Sondrio', 'SO'],
+    ['LILQ', 'Aeroporto Massa Cinquale', 'Massa', 'Massa-Carrara', 'MC '],
+    ['LILR', 'Aeroporto di Migliaro', 'Cremona', 'Cremona', 'CR'],
+    ['LILS', 'Eliporto di Clusone', 'Clusone', 'Bergamo', 'BG'],
+    ['LILV', 'Aeroporto di Valbrembo "Sergio Aldo Capoferri"', 'Valbrembo', 'Bergamo', 'BG'],
+    ['LILY', 'Como Idroscalo', 'Como', 'Como', 'CO'],
+    ['LIMA', 'Aeroporto Aeritalia', 'Torino', 'Torino', 'TO'],
+    ['LIMB', 'Aerodromo di Bresso', 'Milano', 'Milano', 'MI'],
+    ['LIMC', 'Aeroporto Internazionale di Malpensa', 'Milano', 'Milano', 'MI'],
+    ['LIME', 'Aeroporto Internazionale "Il Caravaggio"', 'Bergamo', 'Bergamo', 'BG'],
+    ['LIMF', 'Aeroporto di Torino "Sandro Pertini"', 'Torino', 'Torino', 'TO'],
+    ['LIMG', 'Aeroporto di Albenga-Riviera Airport', 'Villanova d\'Albenga', 'Savona', 'SV'],
+    ['LIMJ', 'Aeroporto di Genova "Cristoforo Colombo"', 'Genova', 'Genova', 'GE'],
+    ['LIML', 'Aeroporto di Linate', 'Milano', 'Milano', 'MI'],
+    ['LIMN', 'Base Aeronautica di Cameri', 'Cameri', 'Novara', 'NO'],
+    ['LIMP', 'Aeroporto di Parma "Giuseppe Verdi"', 'Parma', 'Parma', 'PR'],
+    ['LIMR', 'aeroporto di Novi Ligure "E.Mossi"', 'Novi Ligure', 'Alessandria', 'AL'],
+    ['LIMS', 'Base Aeronautica San Damiano', 'Piacenza', 'Piacenza', 'PC'],
+    ['LIMW', 'Aeroporto della Valle d\'Aosta "Corrado Gex"', 'Aosta', 'Aosta', 'AO'],
+    ['LIMZ', 'Aeroporto Internazionale di Cuneo', 'Cuneo', 'Cuneo', 'CN'],
+    ['LINB', 'Aviosuperficie Corte', 'Melpignano', 'Lecce', 'LE'],
+    ['LINI', 'Eliporto Isola di San Domino', 'Isole Tremiti', 'Foggia', 'FG'],
+    ['LINL', 'Aeroporto di Lecce-San Cataldo', 'Lecce', 'Lecce', 'LE'],
+    ['LIPA', 'Base Aerea di Aviano', 'Aviano', 'Pordenone', 'PN'],
+    ['LIPB', 'Aeroporto Bolzano Dolomiti "Francesco Baracca"', 'Bolzano', 'Bolzano', 'BZ'],
+    ['LIPC', 'Base Aeronautica di Cervia', 'Cervia', 'Ravenna', 'RA'],
+    ['LIPD', 'Aeroporto di Campoformido', 'Campoformido', 'Udine', 'UD'],
+    ['LIPE', 'Aeroporto di Bologna "Guglielmo Marconi"', 'Bologna', 'Bologna', 'BO'],
+    ['LIPF', 'Aeroporto di Ferrara', 'Ferrara', 'Ferrara', 'FE'],
+    ['LIPG', 'Aeroporto di Gorizia', 'Gorizia', 'Gorizia', 'GO'],
+    ['LIPH', 'Aeroporto di Treviso-Sant\'Angelo "Antonio Canova"', 'Treviso', 'Treviso', 'TV'],
+    ['LIPI', 'Base Aeronautica di Rivolto', 'Rivolto', 'Udine', 'UD'],
+    ['LIPK', 'Aeroporto di Forli\' "L. Ridolfi"', 'Forli\'', 'Forl\'-Cesena', 'FC'],
+    ['LIPL', 'Base Aerea Ghedi', 'Ghedi', 'Brescia', 'BS'],
+    ['LIPM', 'Aeroporto di Modena Marzaglia', 'Modena', 'Modena', 'MO'],
+    ['LIPN', 'Aeroporto di Boscomantico', 'Verona', 'Verona', 'VR'],
+    ['LIPO', 'Aeroporto di Brescia "Gabriele D\'Annunzio"', 'Montichiari', 'Brescia', 'BS'],
+    ['LIPQ', 'Aeroporto di Trieste', 'Ronchi dei Legionari', 'Trieste', 'TS'],
+    ['LIPR', 'Aeroporto Internazionale "Federico Fellini"', 'Rimini', 'Rimini', 'RN'],
+    ['LIPS', 'Base Aerea di Istrana', 'Treviso', 'Treviso', 'TV'],
+    ['LIPT', 'Aeroporto di Vicenza "Tommaso Dal Molin"', 'Vicenza', 'Vicenza', 'VI'],
+    ['LIPU', 'Aeroporto di Padova "Gino Allegri"', 'Padova', 'Padova', 'PD'],
+    ['LIPV', 'Aeroporto di Venezia-Lido "Giovanni Nicelli"', 'Venezia', 'Venezia', 'VE'],
+    ['LIPX', 'Aeroporto di Verona Villafranca "Valerio Catullo"', 'Verona', 'Verona', 'VR'],
+    ['LIPY', 'Base Aerea di Falconara "Raffaello Sanzio"', 'Ancona', 'Ancona', 'AN'],
+    ['LIPZ', 'Aeroporto Internazionale "Marco Polo"', 'Venezia', 'Venezia', 'VE'],
+    ['LIQB', 'Aeroporto Molin Bianco', 'Arezzo', 'Arezzo', 'AR'],
+    ['LIQF', 'Aviosuperficie Sansepolcro', 'Sansepolcro', 'Arezzo', 'AR'],
+    ['LIQG', 'Aviosuperficie Porta della Maremma', 'Cecina', 'Livorno', 'LI'],
+    ['LIQL', 'Aeroporto Tassignano', 'Lucca', 'Lucca', 'LU'],
+    ['LIQN', 'Aeroporto di Rieti "G. Ciuffelli"', 'Rieti', 'Rieti', 'RI'],
+    ['LIQQ', 'Aviosuperficie Serristori', 'Castiglion Fiorentino', 'Arezzo', 'AR'],
+    ['LIQW', 'Aeroporto di Luni', 'Sarzana', 'Genova', 'GE'],
+    ['LIRA', 'Aeroporto Internazionale di Ciampino "Giovan Battista Pastine"', 'Roma', 'Roma', 'RM'],
+    ['LIRC', 'Base Aerea di Centocelle', 'Centocelle', 'Roma', 'RM'],
+    ['LIRE', 'Base Aeronautica di Pratica di Mare', 'Pomezia', 'Roma', 'RM'],
+    ['LIRF', 'Aeroporto Internazionale di Fiumicino "Leonardo da Vinci"', 'Roma', 'Roma', 'RM'],
+    ['LIRG', 'Base Aeronautica di Guidonia', 'Guidonia Montecelio', 'Roma', 'RM'],
+    ['LIRH', 'Base Aeronautica di Frosinone', 'Frosinone', 'Frosinone', 'FR'],
+    ['LIRI', 'Aeroporto Salerno Costa d\'Amalfi', 'Salerno', 'Salerno', 'SA'],
+    ['LIRJ', 'Aeroporto di Marina di Campo', 'Marina di Campo - Isola d\'Elba', 'Livorno', 'LI'],
+    ['LIRL', 'Aeroporto di Latina', 'Latina', 'Latina', 'LT'],
+    ['LIRM', 'Base aerea di Grazzanise', 'Caserta', 'Caserta', 'CE'],
+    ['LIRN', 'Aeroporto Internazionale di Napoli "Ugo Niutta"', 'Napoli', 'Napoli', 'NA'],
+    ['LIRP', 'Aeroporto Internazionale di Pisa "Galileo Galilei"', 'Pisa', 'Pisa', 'PI'],
+    ['LIRQ', 'Aeroporto di Firenze "Amerigo Vespucci"', 'Firenze', 'Firenze', 'FI'],
+    ['LIRS', 'Base Aerea di Grosseto', 'Grosseto', 'Grosseto', 'GR'],
+    ['LIRU', 'Aeroporto di Roma Urbe', 'Roma', 'Roma', 'RM'],
+    ['LIRV', 'Base Aerea di Roma-Viterbo', ' Viterbo', 'Viterbo', 'VT'],
+    ['LIRZ', 'Aeroporto Internazionale dell\'Umbria "San Francesco d\'Assisi"', 'Perugia', 'Perugia', 'PG'],
+    ['LIVD', 'Aeroporto di Dobbiaco', 'Dobbiaco', 'Bolzano', 'BZ'],
+    ['LIVV', 'Aviosuperficie Moncucco', 'Cascina Moncucco', 'Torino', 'TO']]
+
+    function createSelect() {
+      const la = document.getElementById("listAirports");
+      for (i = 0; i < airports.length; i++) {
+        let option = document.createElement("option");
+        option.setAttribute('value', airports[i][0]);
+
+        let optionText = document.createTextNode(airports[i][2] + " - " + airports[i][1] + " - (ICAO: " + airports[i][0] + ")");
+        option.appendChild(optionText);
+        la.appendChild(option);
+      }
+    }
+
+    const userAction = async () => {
+      clear();
+      var title_ar = document.getElementById("title_ar");
+      var title_de = document.getElementById("title_de");
+      var arr = document.getElementById("arrivals");
+      var dep = document.getElementById("departures");
+
+
+
+
+      var timestamp_now = Date.now();
+      var timestamp_end = Math.floor(timestamp_now / 1000);
+      var timestamp_beg = timestamp_end - 86400;
+
+
+      var icao = document.getElementById("listAirports").value;
+      var url = "https://opensky-network.org/api/flights/arrival?airport=" + icao + "&begin=" + timestamp_beg + "&end=" + timestamp_end;
+      const response = await fetch(url);
+      const myJson = await response.json(); //extract JSON from the http response
+      // do something with myJson
+
+      var url2 = "https://opensky-network.org/api/flights/departure?airport=" + icao + "&begin=" + timestamp_beg + "&end=" + timestamp_end;
+      const response1 = await fetch(url2);
+      const myJson1 = await response1.json(); //extract JSON from the http response
+      // do something with myJson
+
+      const para = document.createElement("h2");
+      const node = document.createTextNode("Arrivals");
+      para.appendChild(node);
+      title_ar.appendChild(para)
+
+      const para2 = document.createElement("h2");
+      const node2 = document.createTextNode("Departures");
+      para2.appendChild(node2);
+      title_de.appendChild(para2)
+
+      tableCreate(myJson, arr)
+      tableCreate(myJson1, dep)
+
+    }
+
+    function clear() {
+      var title_ar = document.getElementById("title_ar");
+      var title_de = document.getElementById("title_de");
+      var arr = document.getElementById("arrivals");
+      var dep = document.getElementById("departures");
+      arr.textContent = ""
+      dep.textContent = ""
+      title_ar.textContent = ""
+      title_de.textContent = ""
+    }
+
+    function tableCreate(json, div) {
+      // create elements <table> and a <tbody>
+      var tbl = document.createElement("table");
+      var tblBody = document.createElement("tbody");
+
+      const objectKeys = ["ICAO24", "Est. Departure", "Est. Depart. Airport", "Est. Arrival", "Est. Arriv. Airport", "Callsign"]
+
+      var row = document.createElement("tr");
+      for (var i = 0; i < objectKeys.length; i++) {
+        var cell = document.createElement("td");
+        var cellText = document.createTextNode("" + objectKeys[i]);
+        cell.width = 90;
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+      }
+      tblBody.appendChild(row);
+      // cells creation
+      for (var j = 0; j < json.length; j++) {
+        // table row creation
+        row = document.createElement("tr");
+
+        cell = document.createElement("td");
+        cellText = document.createTextNode(json[j].icao24);
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
+        var formatter = new Intl.DateTimeFormat('it-IT', options);
+        //date.getDay()+"/"+date.getMonth()+"/"+ date.getFullYear()+"\n"+date.getHours()+":"+date.getMinutes()
+        cellText = document.createTextNode(formatter.format(new Date(json[j].firstSeen * 1000)));
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cellText = document.createTextNode(json[j].estDepartureAirport === null ? "" : json[j].estDepartureAirport);
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cellText = document.createTextNode(formatter.format(new Date(json[j].lastSeen * 1000)));
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cellText = document.createTextNode(json[j].estArrivalAirport === null ? "" : json[j].estArrivalAirport);
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cellText = document.createTextNode(json[j].callsign === null ? "" : json[j].callsign);
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+
+        //row added to end of table body
+        tblBody.appendChild(row);
+      }
+
+      // append the <tbody> inside the <table>
+      tbl.appendChild(tblBody);
+      // put <table> in the <body>
+      div.appendChild(tbl);
+      // tbl border attribute to 
+      tbl.setAttribute("border", "2");
+    }
+  </script>
+
+
   <title>Live Flight Data Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -10,16 +284,18 @@
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
   <!-- <script src="https://unpkg.com/@aspnet/signalr@1.0.2/dist/browser/signalr.js"></script>-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
-
   <!-- Add a reference to the Azure Maps Services Module JavaScript file. -->
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
+
+
+
   <script>
-    
+
     var map, datasource, popup, symbolLayer;
 
     function GetMap() {
       //Add Map Control JavaScript code here.
-       map = new atlas.Map("myMap", {
+      map = new atlas.Map("myMap", {
         //Add your Azure Maps subscription key to the map SDK. Get an Azure Maps key at https://azure.com/maps
         authOptions: {
           authType: "subscriptionKey",
@@ -40,54 +316,54 @@
         //Create a data source and add it to the map
         map.imageSprite.createFromTemplate('myTemplatedIcon', 'triangle-arrow-up', 'teal', '#fff')
 
-//Add a symbol layer that uses the custom created icon.
+        //Add a symbol layer that uses the custom created icon.
 
         datasource = new atlas.source.DataSource();
         map.sources.add(datasource);
 
-        symbolLayer=new atlas.layer.SymbolLayer(datasource, null, {
+        symbolLayer = new atlas.layer.SymbolLayer(datasource, null, {
           iconOptions: {
-              image: 'myTemplatedIcon',
-              ignorePlacement: true,
-              allowOverlap: true,
-              size: 0.5,
-              rotation: ["get", "rotation"],
+            image: 'myTemplatedIcon',
+            ignorePlacement: true,
+            allowOverlap: true,
+            size: 0.5,
+            rotation: ["get", "rotation"],
           },
-        /*  textOptions: {
-            textField: [
-              "concat",
-              ["to-string", ["get", "name"]],
-              "- ",
-              ["get", "altitude"],
-            ],
-            color: "#FFFFFF",
-            offset: [2, 0],
-          },*/
+          /*  textOptions: {
+              textField: [
+                "concat",
+                ["to-string", ["get", "name"]],
+                "- ",
+                ["get", "altitude"],
+              ],
+              color: "#FFFFFF",
+              offset: [2, 0],
+            },*/
         })
         map.layers.add(symbolLayer);
 
-        
+
         //Add a symbol layer that uses the custom created icon.
-/*        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
-          iconOptions: {
-            ignorePlacement: true,
-            allowOverlap: true,
-            image: "plane-icon",
-            size: 0.08,
-            rotation: ["get", "rotation"],
-          },
-          textOptions: {
-            textField: [
-              "concat",
-              ["to-string", ["get", "name"]],
-              "- ",
-              ["get", "altitude"],
-            ],
-            color: "#FFFFFF",
-            offset: [2, 0],
-          },
-        }));
-*/
+        /*        map.layers.add(new atlas.layer.SymbolLayer(datasource, null, {
+                  iconOptions: {
+                    ignorePlacement: true,
+                    allowOverlap: true,
+                    image: "plane-icon",
+                    size: 0.08,
+                    rotation: ["get", "rotation"],
+                  },
+                  textOptions: {
+                    textField: [
+                      "concat",
+                      ["to-string", ["get", "name"]],
+                      "- ",
+                      ["get", "altitude"],
+                    ],
+                    color: "#FFFFFF",
+                    offset: [2, 0],
+                  },
+                }));
+        */
 
 
 
@@ -101,9 +377,9 @@
           document.getElementById("messages").innerHTML = message;
         });
   */           popup = new atlas.Popup({
-                    position: [0, 0],
-                    pixelOffset: [0, -18]
-                });
+            position: [0, 0],
+            pixelOffset: [0, -18]
+          });
         map.events.add('mousemove', closePopup);
         map.events.add('mousemove', symbolLayer, symbolHovered);
         map.events.add('touchstart', symbolLayer, symbolHovered);
@@ -121,31 +397,31 @@
 
 
     }
-    async function populate(){
-    //const response=await fetch("https://openskyiu.azurewebsites.net/api/flightlist")
-    //const response=await fetch("")
-    //console.log(response.json())
-    /*fetch('http://localhost:7071/api/flightlist')
-   .then(response => {return response.json()})
-   .then(res =>{ console.log(JSON.stringify(res))})
+    async function populate() {
+      //const response=await fetch("https://openskyiu.azurewebsites.net/api/flightlist")
+      //const response=await fetch("")
+      //console.log(response.json())
+      /*fetch('http://localhost:7071/api/flightlist')
+     .then(response => {return response.json()})
+     .then(res =>{ console.log(JSON.stringify(res))})
+      
     
-  
-  
-  
-    */
-    var req = new XMLHttpRequest(); 
-    var url = "https://openskyiu.azurewebsites.net/api/flightlist";
+    
+    
+      */
+      var req = new XMLHttpRequest();
+      var url = "https://openskyiu.azurewebsites.net/api/flightlist";
 
-    req.open('GET', url, true);
-    req.onload  = function() {
-   var jsonResponse = JSON.parse(req.responseText);
-   console.log(jsonResponse)
-   ProcessFlightData(jsonResponse)
-};
-  req.send(null);
-  
-  
-  } 
+      req.open('GET', url, true);
+      req.onload = function () {
+        var jsonResponse = JSON.parse(req.responseText);
+        console.log(jsonResponse)
+        ProcessFlightData(jsonResponse)
+      };
+      req.send(null);
+
+
+    }
     let planes = [];
 
     function ProcessFlightData(flight) {
@@ -172,8 +448,8 @@
         newFlightPin.addProperty("verticalRate", f[12]);
         newFlightPin.addProperty("velocity", f[10]);
         newFlightPin.addProperty("geoAltitude", f[14]);
-        
-        
+
+
 
         planes[f[1]] = newFlightPin;
       }
@@ -186,18 +462,18 @@
     }
 
     function closePopup() {
-            popup.close();
-        }
+      popup.close();
+    }
 
-      function symbolHovered(e) {
-            //Make sure the event occurred on a shape feature.
-            if (e.shapes && e.shapes.length > 0) {
-                var properties = e.shapes[0].getProperties();
+    function symbolHovered(e) {
+      //Make sure the event occurred on a shape feature.
+      if (e.shapes && e.shapes.length > 0) {
+        var properties = e.shapes[0].getProperties();
 
-                //Update the content and position of the popup.
-                popup.setOptions({
-                    //Create the content of the popup.
-                    content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
+        //Update the content and position of the popup.
+        popup.setOptions({
+          //Create the content of the popup.
+          content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
                       <br>Origin Country: ${properties.originCountry}</br>
                       <br>Last position update: ${properties.lastPosUpdate}</br>
 
@@ -215,15 +491,15 @@
 
                       
                       </div>`
-                      ,
-                    position: e.shapes[0].getCoordinates(),
-                    pixelOffset: [0, -18]
-                });
+          ,
+          position: e.shapes[0].getCoordinates(),
+          pixelOffset: [0, -18]
+        });
 
-                //Open the popup.
-                popup.open(map);
-            }
-        }
+        //Open the popup.
+        popup.open(map);
+      }
+    }
 
 
   </script>
@@ -231,22 +507,54 @@
   <style>
     html,
     body {
-      width: 80%;
-      height: 80%;
+      width: 100%;
+      height: 100%;
       padding: 0;
       margin: 0;
     }
 
     #myMap {
-      width: 100%;
-      height: 100%;
+      width: 50%;
+      height: 70%;
     }
   </style>
 </head>
 
-<body onload="GetMap();populate()">
-  <div id="myMap"></div>
-  <div id="messages"></div>
+<body onload="GetMap();populate();createSelect();">
+  <table>
+    <tbody>
+      <tr height="600">
+        <td id="myMap"></td>
+        <td style="vertical-align: top;">
+          <div id="messages"></div>
+          <br>
+          <h1>Statistics by airport</h1>
+          <select id="listAirports"></select>
+          <button type="button" onclick="userAction()">Search</button>
+          <table>
+            <tbody>
+              <tr>
+                <td id="title_de" width="700">
+                </td>
+              </tr>
+              <tr>
+                <td id="departures" width="700" style="vertical-align: top;">
+                </td>
+              </tr>
+              <tr>
+                <td id="title_ar" width="700">
+                </td>
+              </tr>
+              <tr>
+                <td id="arrivals" width="700" style="vertical-align: top;">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 
 </html>
