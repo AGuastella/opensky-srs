@@ -42,11 +42,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             VALUES (v."time",v.icao24,v.flightcode,v.country,v.timeposition,v.lastcontact,v.longitude,v.latitude,v.baroaltitude,v.onground,v.velocity,v.truetrack,v.verticalrate,v.sensors,v.geoaltitude,v.squawk,v.spi,v.positionsource);
     """
 
+    sql_update_to_landed="""
+        UPDATE livestates
+        SET
+            onground = 1
+        WHERE onground = 0 AND icao24 = ?;
+    """
+
+    # query that set to inactive all the flight that aren't detected anymore, from at least 5 minutes
     sql_update_to_inactive="""
         UPDATE livestates
         SET
             onground = 1
-        WHERE icao24 = ?;
+        WHERE onground = 0 AND lastcontact < DATEDIFF(s, '1970-01-01', GETUTCDATE()) - 300;
     """
 
     r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232')
@@ -71,11 +79,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             # UPDATE voli attivi. Un volo diventa non attivo se:
             # - passa allo stato unground
             if len(on_ground) > 0:
-                cursor.executemany(sql_update_to_inactive, on_ground)
+                cursor.executemany(sql_update_to_landed, on_ground)
                 cursor.commit()
 
-            #cursor.executemany(sql_passing_onground)
-            #cursor.commit()
+            cursor.execute(sql_update_to_inactive)
+            cursor.commit()
 
             conn.commit()
              
