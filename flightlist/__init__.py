@@ -13,10 +13,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     password = 'colajanni<3'   
     driver= '{ODBC Driver 17 for SQL Server}'
     select_query="""
-SELECT * FROM liveinfo
+SELECT * FROM livestates
 """
     distance_query="""
-SELECT SUM(DISTANCE) FROM LIVEINFO
+SELECT SUM(DISTANCE) FROM livestates
 """
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
 
