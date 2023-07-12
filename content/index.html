@@ -134,12 +134,13 @@
   
     */
     var req = new XMLHttpRequest(); 
-    var url = "http://localhost:7071/api/flightlist";
+    var url = "https://openskyiu.azurewebsites.net/api/flightlist";
 
     req.open('GET', url, true);
     req.onload  = function() {
    var jsonResponse = JSON.parse(req.responseText);
    console.log(jsonResponse)
+   ProcessFlightData(jsonResponse)
 };
   req.send(null);
   
@@ -205,7 +206,7 @@
 
                       <br>Velocity: ${properties.velocity}</br>
 
-                      <br>True Track: ${properties.rotatiion}</br>
+                      <br>True Track: ${properties.rotation}</br>
 
                       <br>Vertical Rate: ${properties.verticalRate}</br>
 

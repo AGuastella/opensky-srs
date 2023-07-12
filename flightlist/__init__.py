@@ -1,4 +1,5 @@
 import json
+import math
 import pyodbc
 import azure.functions as func
 import pandas as pd
@@ -25,11 +26,20 @@ SELECT SUM(DISTANCE) FROM LIVEINFO
              result_distance=cursor.execute(distance_query)
              distance=result_distance.fetchval()
         
-    #print(data[1:6])
-    print(json.dumps(data[1:6]))
-    #print(type(data[0][0]))
-    return func.HttpResponse(
-        body=json.dumps(data),
+
+    # Replace NaN values with null
+    #data_with_null = [[v if not (isinstance(v, float) and math.isnan(v)) else None for v in sublist] for sublist in data]
+
+    data_with_null = [[None if (isinstance(v, float) and math.isnan(v)) else v for v in sublist] for sublist in data]
+    data_with_null.append(distance)
+    # Convert data to JSON
+    json_data = json.dumps(data_with_null)
+
+    # Return JSON response
+    return func.HttpResponse(body=json_data, mimetype="application/json")
+    
+    '''return func.HttpResponse(
+        body=json.dumps(data, default=lambda x: None if isinstance(x, float) and math.isnan(x) else x),
         mimetype="application/json"
 
-    )
+    )'''
