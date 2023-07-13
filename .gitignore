@@ -134,4 +134,9 @@ __queuestorage__
 __azurite_db*__.json
 .python_packages
 broadcast/__pycache__/__init__.cpython-311.pyc
+HttpTrigger2/__pycache__/__init__.cpython-311.pyc
+index/__pycache__/__init__.cpython-311.pyc
+negotiate/__pycache__/__init__.cpython-311.pyc
+
+broadcast/__pycache__/__init__.cpython-311.pyc
 broadcast/__pycache__/__init__.cpython-310.pyc
