@@ -6,15 +6,17 @@ import pyodbc
 from utility.italianairspace import italianairspace as it
 from utility.query_statement import query as q
 
-server = 'openskysrs.database.windows.net'
-database = 'openskydb'
-username = 'CloudSA2b425ff0'
-password = 'colajanni<3'   
-driver= '{ODBC Driver 17 for SQL Server}'
+
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
+    server = 'openskysrs.database.windows.net'
+    database = 'openskydb'
+    username = 'CloudSA2b425ff0'
+    password = 'colajanni<3'   
+    driver= '{ODBC Driver 17 for SQL Server}'
 
     r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232')
+    print(r.json()['states'][0])
     j = r.json()
     states = j['states']
     t = j['time']

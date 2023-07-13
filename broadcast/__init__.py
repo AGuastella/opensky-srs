@@ -3,6 +3,7 @@ import json
 import pyodbc
 import azure.functions as func
 import pandas as pd
+
 def main(req: func.HttpRequest,signalRMessages: func.Out[str]) -> func.HttpResponse:
 
     server = 'openskysrs.database.windows.net'
@@ -14,7 +15,7 @@ def main(req: func.HttpRequest,signalRMessages: func.Out[str]) -> func.HttpRespo
             SELECT * FROM livestates WHERE onground=0
         """
     distance_query="""
-            SELECT SUM(DISTANCE) FROM livestates
+            SELECT SUM(DISTANCE) FROM livestates WHERE onground=0
         """
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
         #with conn.cursor() as cursor:
