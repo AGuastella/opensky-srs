@@ -45,3 +45,9 @@ sql_update_to_inactive= f"""
         onground = 1
     WHERE onground = 0 AND lastcontact < DATEDIFF(s, '1970-01-01', GETUTCDATE()) - 300;
 """
+select_active_flights="""
+            SELECT * FROM livestates WHERE onground=0
+        """
+distance_query="""
+            SELECT SUM(DISTANCE) FROM livestates where lastcontact > DATEDIFF(s, '1970-01-01', GETUTCDATE()) - 86400;
+        """

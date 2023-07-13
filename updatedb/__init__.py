@@ -27,12 +27,7 @@ def main(nome: str) -> str:
     states = j['states']
     t = j['time']
     df = pd.DataFrame(j)
-    select_query="""
-            SELECT * FROM livestates WHERE onground=0
-        """
-    distance_query="""
-            SELECT SUM(DISTANCE) FROM livestates
-        """
+
     list_of_lists = df.apply(lambda row: [row['time']] + row['states'], axis=1).tolist()
 
     on_air = [l for l in list_of_lists if not l[9] and it.is_in_italian_airspace(l[7], l[6])]
@@ -56,9 +51,9 @@ def main(nome: str) -> str:
             cursor.commit()
 
             conn.commit()
-            result_distance=cursor.execute(distance_query)
+            result_distance=cursor.execute(q.distance_query)
             distance=result_distance.fetchval()
-        data = pd.read_sql(select_query,conn).values.tolist()    
+        data = pd.read_sql(q.select_active_flights,conn).values.tolist()    
     
     data.append(distance)
     
