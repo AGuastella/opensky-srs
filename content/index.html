@@ -14,7 +14,7 @@
   <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas-service.min.js"></script>
   <script>
 
-    var map, datasource, popup, symbolLayer, planes = [];;
+    var map, datasource, popup, symbolLayer, planes = [];
 
     function GetMap() {
       map = new atlas.Map("myMap", {
@@ -65,10 +65,10 @@
         map.events.add('mousemove', closePopup);
         map.events.add('mousemove', symbolLayer, symbolHovered);
         map.events.add('touchstart', symbolLayer, symbolHovered);
-        fetch('https://openskyiu.azurewebsites.net/api/flightlist')
+        /*fetch('https://openskyiu.azurewebsites.net/api/flightlist')
           .then(response => { return response.json() })
           .then(res => { ProcessFlightData(res) })
-
+*/
         StartConnection(connection)
 
         connection.on('newMessage', ProcessFlightData)
