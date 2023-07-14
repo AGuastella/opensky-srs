@@ -31,10 +31,10 @@ def main(nome: str) -> dict:
             #r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232', auth = HTTPBasicAuth(oc.opensky_credential[rand][0], oc.opensky_credential[rand][1]))
             
             # RICHIESTA CON CREDENZIALI SINGOLE
-            r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232', auth = HTTPBasicAuth('g1g1', 'dkKIskisiKIKI£443'))
+            #r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232', auth = HTTPBasicAuth('g1g1', 'dkKIskisiKIKI£443'))
 
             # RICHIESTA SENZA CREDENZIALI
-            #r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232')
+            r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232')
 
             if r is None: 
                 raise none_result
