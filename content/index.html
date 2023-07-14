@@ -343,7 +343,7 @@
         map.events.add('mousemove', closePopup);
         map.events.add('mousemove', symbolLayer, symbolHovered);
         map.events.add('touchstart', symbolLayer, symbolHovered);
-        //map.events.add('click', addPath)
+        map.events.add('click', addPath)
         fetch('https://openskyiu.azurewebsites.net/api/flightlist')
           .then(response => { return response.json() })
           .then(res => { ProcessFlightData(res) })
@@ -417,9 +417,6 @@
                       <br>Velocity: ${properties.velocity} km/h
                       <br>Vertical Rate: ${properties.verticalRate} km/h
                       <br>Geo Altitude: ${properties.geoAltitude} m
-                      <br><br>
-                      <input type="checkbox" id="showPath" value="show" onclick="addPath('${properties.icao24}')">
-                      <label for="showPath">Show path</label><br>
                       </div>`
           ,
           position: e.shapes[0].getCoordinates(),
@@ -440,43 +437,31 @@
         })
     }
 
-    async function addPath(icao24) {
-      var checkbox = document.getElementById("showPath").checked;
-      if (checkbox == false) {
-        datasource.removeById("linestring");
-        map.layers.remove(line_layer);
-        line_layer = null;
-      }
-      /*
-      if (feat != null) {
+    async function addPath(e) {
+      try {
         datasource.removeById("linestring")
-      }
-      if (line_layer != null) {
-        map.layers.remove(line_layer);
-        line_layer = null;
-      }*/
-      else {
-        try {
-          var url = "https://opensky-network.org/api/tracks/all?icao24=" + icao24 + "&time=0";
-          const respath = await fetch(url);
-          const resjson = await respath.json(); //extract JSON from the http response
-          var tracks = resjson.path;
-          var path = [];
-          for (var i = 0; i < tracks.length; i++) {
-            path[i] = [];
-            path[i][0] = tracks[i][2];
-            path[i][1] = tracks[i][1];
-          }
-          var linestring = new atlas.data.LineString(path)
-          feat = new atlas.data.Feature(linestring, null, "linestring")
-          datasource.add(feat);
-          line_layer = new atlas.layer.LineLayer(datasource);
-          map.layers.add(line_layer);
-        } catch {
-          //checkbox = false
+        if (line_layer != null) {
+          map.layers.remove(line_layer);
+          line_layer = null;
         }
+        var icao24 = (e.shapes[0].getProperties()).icao24;
+        var url = "https://opensky-network.org/api/tracks/all?icao24=" + icao24 + "&time=0";
+        const respath = await fetch(url);
+        const resjson = await respath.json(); //extract JSON from the http response
+        var tracks = resjson.path;
+        var path = [];
+        for (var i = 0; i < tracks.length; i++) {
+          path[i] = [];
+          path[i][0] = tracks[i][2];
+          path[i][1] = tracks[i][1];
+        }
+        var linestring = new atlas.data.LineString(path)
+        feat = new atlas.data.Feature(linestring, null, "linestring")
+        datasource.add(feat);
+        line_layer = new atlas.layer.LineLayer(datasource);
+        map.layers.add(line_layer);
+      } catch {
       }
-
     }
   </script>
 
