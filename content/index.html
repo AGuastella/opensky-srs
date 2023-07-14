@@ -340,10 +340,11 @@
           position: [0, 0],
           pixelOffset: [0, -18]
         });
-        map.events.add('mousemove', closePopup);
-        map.events.add('mousemove', symbolLayer, symbolHovered);
-        map.events.add('touchstart', symbolLayer, symbolHovered);
-        map.events.add('click', addPath)
+        map.events.add('click', closePopup);
+        map.events.add('click', symbolLayer, symbolHovered);
+        //map.events.add('touchstart', symbolLayer, symbolHovered);
+        map.events.add('click', addPath);
+
         fetch('https://openskyiu.azurewebsites.net/api/flightlist')
           .then(response => { return response.json() })
           .then(res => { ProcessFlightData(res) })
@@ -381,6 +382,7 @@
         newFlightPin.addProperty("rotation", f[11]);
         newFlightPin.addProperty("originCountry", f[3]);
         newFlightPin.addProperty("lastPosUpdate", formatter.format(new Date(f[4] * 1000)));
+        newFlightPin.addProperty("lastPosTime", f[4]);
         newFlightPin.addProperty("lastContact", formatter.format(new Date(f[5] * 1000)));
         newFlightPin.addProperty("verticalRate", (f[12] * 3.6).toFixed(2));
         newFlightPin.addProperty("velocity", (f[10] * 3.6).toFixed(2));
@@ -444,16 +446,20 @@
           map.layers.remove(line_layer);
           line_layer = null;
         }
-        var icao24 = (e.shapes[0].getProperties()).icao24;
-        var url = "https://opensky-network.org/api/tracks/all?icao24=" + icao24 + "&time=0";
+        var properties = e.shapes[0].getProperties();
+        var icao24 = properties.icao24;
+        var timelastpos = properties.lastPosTime;
+        var url = "https://opensky-network.org/api/tracks/all?icao24=" + icao24 + "&time=" + timelastpos;
         const respath = await fetch(url);
         const resjson = await respath.json(); //extract JSON from the http response
         var tracks = resjson.path;
         var path = [];
         for (var i = 0; i < tracks.length; i++) {
           path[i] = [];
-          path[i][0] = tracks[i][2];
-          path[i][1] = tracks[i][1];
+          if (tracks[i][0]<=timelastpos) {
+            path[i][0] = tracks[i][2];
+            path[i][1] = tracks[i][1];
+          }
         }
         var linestring = new atlas.data.LineString(path)
         feat = new atlas.data.Feature(linestring, null, "linestring")
