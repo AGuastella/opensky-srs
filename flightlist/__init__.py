@@ -37,5 +37,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     '''return func.HttpResponse(
         body=json.dumps(data, default=lambda x: None if isinstance(x, float) and math.isnan(x) else x),
         mimetype="application/json"
-
     )'''
