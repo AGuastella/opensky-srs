@@ -5,25 +5,24 @@
 # - create a Durable HTTP starter function
 # - add azure-functions-durable to requirements.txt
 # - run pip install -r requirements.txt
-import json
-import logging
+
 import azure.functions as func
 import pandas as pd
 import pyodbc
 import time
 from utility.italianairspace import italianairspace as it
 from utility.query_statement import query as q
+
 server = 'openskysrs.database.windows.net'
 database = 'openskydb'
 username = 'CloudSA2b425ff0'
 password = 'colajanni<3'   
 driver= '{ODBC Driver 17 for SQL Server}'
+
 def main(j: dict) -> str:
     
-    
-
     df = pd.DataFrame(j)
-    print(df)
+    #print(df)
     list_of_lists = df.apply(lambda row: [int(time.time())] + row['states'], axis=1).tolist()
 
     on_air = [l for l in list_of_lists if not l[9] and it.is_in_italian_airspace(l[7], l[6])]
@@ -47,5 +46,6 @@ def main(j: dict) -> str:
             cursor.commit()
 
         conn.commit()
-        print("Ioooooooo")
-        return "cioa"
+        #print("Ioooooooo")
+        
+        return "ok"
