@@ -14,10 +14,12 @@ import azure.durable_functions as df
 
 
 def orchestrator_function(context: df.DurableOrchestrationContext):
-    jsonUpdate = yield context.call_activity('updatedb',"gene")
-    result1 = yield context.call_activity('Hello1',jsonUpdate)
+    osdict = yield context.call_activity('apirequest',None)
+    print(osdict['time'])
+    print(type(osdict['states']))
+    yield context.call_activity('updatedb',osdict)
+    yield context.call_activity('broadcast',None)
 
-    print(result1)
-    return result1
-
+    
+    
 main = df.Orchestrator.create(orchestrator_function)

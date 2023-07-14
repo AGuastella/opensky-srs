@@ -2,7 +2,7 @@
   "scriptFile": "__init__.py",
   "bindings": [
     {
-      "name": "jsonUpdate",
+      "name": "nome",
       "type": "activityTrigger",
       "direction": "in"
     } ,
