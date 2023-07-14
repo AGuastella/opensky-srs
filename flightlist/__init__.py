@@ -5,6 +5,7 @@ import azure.functions as func
 import pandas as pd
 import azure.functions as func
 
+from utility.query_statement import query as q
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     server = 'openskysrs.database.windows.net'
@@ -12,18 +13,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     username = 'CloudSA2b425ff0'
     password = 'colajanni<3'   
     driver= '{ODBC Driver 17 for SQL Server}'
-    select_query="""
-SELECT * FROM livestates
-"""
-    distance_query="""
-SELECT SUM(DISTANCE) FROM livestates
-"""
+
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
 
            
-           data = pd.read_sql(select_query,conn).values.tolist()
+           data = pd.read_sql(q.select_active_flights,conn).values.tolist()
            with conn.cursor() as cursor:
-             result_distance=cursor.execute(distance_query)
+             result_distance=cursor.execute(q.distance_query)
              distance=result_distance.fetchval()
         
 
