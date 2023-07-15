@@ -2,7 +2,19 @@
 <html>
 
 <head>
+  <style>
+    #load {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: 9999;
+      background: url("https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca_w200.gif") no-repeat center center rgba(0, 0, 0, 0.25);
 
+      /*background: url("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921") no-repeat center center rgba(0, 0, 0, 0.25);*/
+      /*background-size: cover;*/
+
+    }
+  </style>
   <!-- SCRIPT AGGIUNTO DA MICHELE-->
   <script>
     const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
@@ -292,9 +304,10 @@
 
   <script>
 
-    var map, datasource, popup, symbolLayer, line_layer = null, feat = null, planes = [];
+    var map, datasource, popup, symbolLayer, line_layer = null, feat = null, planes = [], painted = '', path = [];
 
     function GetMap() {
+
       map = new atlas.Map("myMap", {
         authOptions: {
           authType: "subscriptionKey",
@@ -322,9 +335,10 @@
             ignorePlacement: true,
             allowOverlap: true,
             size: 0.5,
+            
             rotation: ["get", "rotation"],
           },
-
+          filter: ['==', ['geometry-type'], 'Point'] //Only render point data in this layer and not the coordinates of lines.
         })
         map.layers.add(symbolLayer);
 
@@ -347,12 +361,14 @@
 
         fetch('https://openskyiu.azurewebsites.net/api/flightlist')
           .then(response => { return response.json() })
-          .then(res => { ProcessFlightData(res) })
-
+          .then(res => { ProcessFlightData(res) 
+           })
+          
         StartConnection(connection)
 
         connection.on('newMessage', ProcessFlightData)
 
+        map.events.add('data',caricatutto);
 
       });
 
@@ -364,9 +380,8 @@
 
     function ProcessFlightData(flight) {
 
-
+      planes = []
       len = flight.length - 1
-      console.log(len)
       for (let i = 0; i < len; i++) {
         f = flight[i]
 
@@ -387,13 +402,43 @@
         newFlightPin.addProperty("verticalRate", (f[12] * 3.6).toFixed(2));
         newFlightPin.addProperty("velocity", (f[10] * 3.6).toFixed(2));
         newFlightPin.addProperty("geoAltitude", f[14]);
-
+        newFlightPin.addProperty("latitude", f[7]);
+        newFlightPin.addProperty("longitude", f[6]);
 
 
         planes[f[1]] = newFlightPin;
       }
-      datasource.setShapes(Object.values(planes));
 
+      datasource.setShapes(Object.values(planes));
+      if (painted != '') {
+        if (planes[painted] != null) {
+          path[path.length] = planes[painted].getCoordinates()
+
+
+
+
+          var linestring = new atlas.data.LineString(path)
+          feat = new atlas.data.Feature(linestring, null, "linestring")
+          datasource.add(feat);
+          line_layer = new atlas.layer.LineLayer(datasource);
+          map.layers.add(line_layer);
+          if (popup.isOpen()) {
+            setPopupLabel(planes[painted].getProperties(), planes[painted].getCoordinates());
+          }
+        } else {
+          datasource.removeById("linestring")
+          if (line_layer != null) {
+            map.layers.remove(line_layer);
+            line_layer = null;
+            painted = ''
+            path = []
+            if (popup.isOpen()) {
+              closePopup()
+            }
+          }
+
+        }
+      }
       mess = document.getElementById("messages");
       mess.innerHTML = "<h1>Total distance travelled: &nbsp&nbsp&nbsp " + (flight[len] / 1000.0).toFixed(3) + " Km</h1>";
 
@@ -406,8 +451,14 @@
     function symbolHovered(e) {
       //Make sure the event occurred on a shape feature.
       if (e.shapes && e.shapes.length > 0) {
-        var properties = e.shapes[0].getProperties();
+         setPopupLabel(e.shapes[0].getProperties(), e.shapes[0].getCoordinates())
 
+         //Open the popup.
+        popup.open(map);
+      }
+    }
+
+    function setPopupLabel(properties, coordinates){
         //Update the content and position of the popup.
         popup.setOptions({
           //Create the content of the popup.
@@ -421,13 +472,9 @@
                       <br>Geo Altitude: ${properties.geoAltitude} m
                       </div>`
           ,
-          position: e.shapes[0].getCoordinates(),
+          position: coordinates,
           pixelOffset: [0, -18]
         });
-
-        //Open the popup.
-        popup.open(map);
-      }
     }
     function StartConnection(connection) {
       console.log('connecting...')
@@ -445,6 +492,8 @@
         if (line_layer != null) {
           map.layers.remove(line_layer);
           line_layer = null;
+          painted = ''
+          path = []
         }
         var properties = e.shapes[0].getProperties();
         var icao24 = properties.icao24;
@@ -453,21 +502,37 @@
         const respath = await fetch(url);
         const resjson = await respath.json(); //extract JSON from the http response
         var tracks = resjson.path;
-        var path = [];
-        for (var i = 0; i < tracks.length; i++) {
+
+
+        for (var i = 0; i < tracks.length && tracks[i][0] < timelastpos; i++) {
           path[i] = [];
-          if (tracks[i][0]<=timelastpos) {
-            path[i][0] = tracks[i][2];
-            path[i][1] = tracks[i][1];
-          }
+
+          path[i][0] = tracks[i][2];
+          path[i][1] = tracks[i][1];
+
         }
-        var linestring = new atlas.data.LineString(path)
-        feat = new atlas.data.Feature(linestring, null, "linestring")
-        datasource.add(feat);
-        line_layer = new atlas.layer.LineLayer(datasource);
-        map.layers.add(line_layer);
+        if (path.length != 0) {
+          path[path.length] = []
+          path[i][0] = properties.longitude
+          path[i][1] = properties.latitude
+          painted = icao24
+          var linestring = new atlas.data.LineString(path)
+          feat = new atlas.data.Feature(linestring, null, "linestring")
+          datasource.add(feat);
+          line_layer = new atlas.layer.LineLayer(datasource);
+          map.layers.add(line_layer);
+         
+        }
       } catch {
       }
+    }
+    function caricatutto(){
+setTimeout(function(){
+         document.getElementById('load').style.visibility="hidden";
+         document.getElementById('cont').style.visibility="visible";
+},2500
+)
+
     }
   </script>
 
@@ -488,6 +553,8 @@
 </head>
 
 <body onload="GetMap();createSelect();">
+  <div id="load" ></div>
+  <div id="cont" style ="visibility: hidden;">
   <table>
     <tbody>
       <tr height="600">
@@ -495,7 +562,7 @@
         <td style="vertical-align: top;">
           <div id="messages"></div>
           <br>
-          <h1>Statistics by airport</h1>
+          <h1>Airports Events</h1>
           <select id="listAirports"></select>
           <button type="button" onclick="userAction()">Search</button>
           <table>
@@ -522,5 +589,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
+</body>
 
 </html>
