@@ -35,7 +35,7 @@ def main(j: dict) -> str:
             cursor.fast_executemany = True
             
             # MERGE+INSERT: update delle info dei voli ATTIVI
-            cursor.executemany(q.sql_merge_bard_chat, on_air)
+            cursor.executemany(q.sql_merge, on_air)
             cursor.commit()
             
             # UPDATE voli attivi. Un volo diventa non attivo se:
