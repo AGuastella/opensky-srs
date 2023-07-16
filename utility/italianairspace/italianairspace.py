@@ -1,3 +1,8 @@
+italian_bbox = 'lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232'
+
+bbox = 'lamin=34&lomin=4&lamax=50&lomax=22'
+
+
 def is_in_italian_airspace(latitude, longitude):
     # Define the boundaries of the Italian airspace
     boundary_coordinates = [

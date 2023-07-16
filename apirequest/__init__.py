@@ -14,6 +14,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 from utility.credential import openskycredential as oc
+from utility.italianairspace import italianairspace as it
 
 
 class none_result(Exception):
@@ -28,13 +29,13 @@ def main(nome: str) -> dict:
             rand = random.randint(0, len(oc.opensky_credential)-1)
 
             # RICHIESTA CON CREDENZIALI, A ROTAZIONE
-            r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232', auth = HTTPBasicAuth(oc.opensky_credential[rand][0], oc.opensky_credential[rand][1]))
+            r = requests.get(f'https://opensky-network.org/api/states/all?{it.bbox}', auth = HTTPBasicAuth(oc.opensky_credential[rand][0], oc.opensky_credential[rand][1]))
             
             # RICHIESTA CON CREDENZIALI SINGOLE
-            #r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232', auth = HTTPBasicAuth('g1g1', 'dkKIskisiKIKI£443'))
+            #r = requests.get('https://opensky-network.org/api/states/all?{it.bbox}', auth = HTTPBasicAuth('g1g1', 'dkKIskisiKIKI£443'))
 
             # RICHIESTA SENZA CREDENZIALI
-            #r = requests.get('https://opensky-network.org/api/states/all?lamin=36.619987291&lomin=6.7499552751&lamax=47.1153931748&lomax=18.4802470232')
+            #r = requests.get('https://opensky-network.org/api/states/all?{it.bbox}')
 
             if r is None: 
                 raise none_result
