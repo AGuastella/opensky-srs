@@ -35,5 +35,6 @@ steps:
   displayName: 'pytest'
 
 - script: |
+    ls
     func azure functionapp publish openskyiu
   displayName: 'publish'
