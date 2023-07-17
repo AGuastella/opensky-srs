@@ -20,7 +20,7 @@ password = 'colajanni<3'
 driver= '{ODBC Driver 17 for SQL Server}'
 
 def main(j: dict) -> str:
-    
+    ####
     df = pd.DataFrame(j)
     #print(df)
     list_of_lists = df.apply(lambda row: [int(time.time())] + row['states'], axis=1).tolist()
