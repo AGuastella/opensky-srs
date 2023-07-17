@@ -6,11 +6,17 @@
 trigger:
 - main
 
+pool:
+  vmImage: ubuntu-latest
 
 strategy:
   matrix:
+    Python37:
+      python.version: '3.7'
     Python310:
       python.version: '3.10'
+    Python311:
+      python.version: '3.11'
 
 steps:
 - task: UsePythonVersion@0
@@ -27,7 +33,3 @@ steps:
     pip install pytest pytest-azurepipelines
     pytest
   displayName: 'pytest'
-
-- script: |
-    func start
-  displayName: 'Publishing'
