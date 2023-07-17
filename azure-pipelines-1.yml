@@ -14,7 +14,7 @@ variables:
   functionAppName: 'onsky'
 
   # Agent VM image name
-  vmImageName: 'windows-latest'
+  vmImageName: 'ubuntu-latest'
 
   # Working Directory
   workingDirectory: '$(System.DefaultWorkingDirectory)/'
@@ -39,15 +39,15 @@ stages:
       displayName: 'Build extensions'
 
     - task: UsePythonVersion@0
-      displayName: 'Use Python 3.10'
+      displayName: 'Use Python 3.11'
       inputs:
-        versionSpec: 3.10 # Functions V2 supports Python 3.6 as of today
+        versionSpec: 3.11 # Functions V2 supports Python 3.6 as of today
 
         #pip install -r ./requirements.txt
-#    - bash: |
-#        pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
-#      workingDirectory: $(workingDirectory)
-#      displayName: 'Install application dependencies'
+    - bash: |
+        pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+      workingDirectory: $(workingDirectory)
+      displayName: 'Install application dependencies'
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
