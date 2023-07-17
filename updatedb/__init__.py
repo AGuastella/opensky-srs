@@ -19,7 +19,7 @@ username = 'CloudSA2b425ff0'
 password = 'colajanni<3'   
 driver= '{ODBC Driver 17 for SQL Server}'
 
-def main(j: dict) -> str:
+def main(j: dict) -> str: 
     
     df = pd.DataFrame(j)
     #print(df)
