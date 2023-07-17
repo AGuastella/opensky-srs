@@ -34,18 +34,35 @@ def main(j: dict) -> str:
         with conn.cursor() as cursor:
             cursor.fast_executemany = True
             
-            # MERGE+INSERT: update delle info dei voli ATTIVI
-            cursor.executemany(q.sql_merge, on_air)
-            cursor.commit()
-            
-            # UPDATE voli attivi. Un volo diventa non attivo se:
-            # - passa allo stato unground
-            if len(on_ground) > 0:
-                cursor.executemany(q.sql_update_to_landed, on_ground)
+            try:
+                # MERGE+INSERT: update delle info dei voli ATTIVI
+                cursor.executemany(q.sql_merge, on_air)
                 cursor.commit()
+            except:
+                print('MERGE NON ANDATA A BUON FINE')
+                print(on_air)
+            
+            cursor.executemany(q.sql_merge, on_air)
+            
 
-            cursor.execute(q.sql_update_to_inactive)
-            cursor.commit()
+            if len(on_ground) > 0:
+                # UPDATE voli attivi. Un volo diventa non attivo se:
+                # - passa allo stato unground
+                # - 
+                try:
+                    cursor.executemany(q.sql_update_to_landed, on_ground)
+                    cursor.commit()
+                except:
+                    print('Aggiornamento atterrati non andato a buon fine')
+                    print(on_air)
+
+            try:
+                cursor.execute(q.sql_update_to_inactive)
+                cursor.commit()
+            except:
+                print('Aggiornamento usciti dallo spazio aereo non andato a buon fine')
+                print(on_air)
+
 
         conn.commit()
         #print("Ioooooooo")
