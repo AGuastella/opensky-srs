@@ -9,3 +9,4 @@ requests
 #SQLAlchemy
 pandas
 azure-functions-durable
+requests
