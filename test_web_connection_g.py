@@ -7,3 +7,4 @@ def test_web_connection(url):
     assert response.status_code == 200
 
 
+#https://openskyiu.azurewebsites.net/api/index?
