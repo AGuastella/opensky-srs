@@ -1,6 +1,5 @@
 import requests
 import pytest
-import pyodbc
 
 @pytest.mark.parametrize("url", ["https://onsky.azurewebsites.net/api/flightlist?"])
 def test_web_connection(url):

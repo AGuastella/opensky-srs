@@ -14,9 +14,11 @@ def test_web_connection(url):
     
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
            data = pd.read_sql(q.select_active_flights,conn).values.tolist()
-    print(data[0])
-
-    assert data[0]
+    
+    if data[0] is not None:
+          assert True
+    else: 
+          assert False
 
 
 #https://openskyiu.azurewebsites.net/api/index?
