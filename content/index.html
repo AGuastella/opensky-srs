@@ -375,7 +375,7 @@
         //map.events.add('touchstart', symbolLayer, symbolHovered);
         map.events.add('click', addPath);
 
-        fetch('https://openskyiu.azurewebsites.net/api/flightlist')
+        fetch(apiBaseUrl + '/api/flightlist')
           .then(response => { return response.json() })
           .then(res => { ProcessFlightData(res) 
            })
