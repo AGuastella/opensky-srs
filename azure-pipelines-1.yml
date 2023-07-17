@@ -50,7 +50,7 @@ stages:
       displayName: 'Install application dependencies'
 
     - bash: |
-        apt-get update && ACCEPT_EULA=Y apt-get install -y unixodbc -dev msodbcsql17
+        sudo apt-get update && ACCEPT_EULA=Y apt-get install -y unixodbc -dev msodbcsql17
       workingDirectory: $(workingDirectory)
       displayName: 'Install odbcdrivers'
 
