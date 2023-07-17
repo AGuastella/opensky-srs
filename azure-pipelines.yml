@@ -29,6 +29,5 @@ steps:
   displayName: 'pytest'
 
 - script: |
-    pip install azure-functions
-    func azure functionapp publish openskyiu
+    func start
   displayName: 'Publishing'
