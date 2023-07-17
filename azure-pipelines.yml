@@ -6,8 +6,7 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+
 strategy:
   matrix:
     Python310:
@@ -31,4 +30,4 @@ steps:
 
 - script: |
     func azure functionapp publish openskyiu
-  displayName: 'Local deploy'
+  displayName: 'Publishing'
