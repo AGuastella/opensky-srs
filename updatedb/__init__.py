@@ -27,6 +27,7 @@ def main(j: dict) -> str:
 
     #on_air = [l for l in list_of_lists if not l[9] and it.is_in_italian_airspace(l[7], l[6])]
     #on_ground = [[l[1]] for l in list_of_lists if l[9] and it.is_in_italian_airspace(l[7], l[6])]
+    
     on_air = [l for l in list_of_lists if not l[9]]
     on_ground = [[l[1]] for l in list_of_lists if l[9]]
    
@@ -41,8 +42,6 @@ def main(j: dict) -> str:
             except:
                 print('MERGE NON ANDATA A BUON FINE')
                 print(on_air)
-            
-            cursor.executemany(q.sql_merge, on_air)
             
 
             if len(on_ground) > 0:
@@ -65,6 +64,6 @@ def main(j: dict) -> str:
 
 
         conn.commit()
-        #print("Ioooooooo")
+        print("INSERIMENTO FINITO")
         
     return "ok"

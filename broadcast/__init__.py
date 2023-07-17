@@ -16,6 +16,9 @@ username = 'CloudSA2b425ff0'
 password = 'colajanni<3'   
 driver= '{ODBC Driver 17 for SQL Server}'
 def main(nome:str,signalRMessages: func.Out[str]) -> str:
+    
+    print('STO A FA LA BRODCAST!!!!!!!')
+
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
         with conn.cursor() as cursor:
             result_distance=cursor.execute(q.distance_query)
