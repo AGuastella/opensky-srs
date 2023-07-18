@@ -2,7 +2,6 @@ import datetime
 import logging
 import azure.functions as func
 import random
-import json
 import time
 import requests
 from requests.auth import HTTPBasicAuth
