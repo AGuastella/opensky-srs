@@ -1,7 +1,7 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=srsontheskyb7f6;AccountKey=bvxzeOYqMORmNjSjYv6imV8NGzOqslcq6naq7aJJc3wsxD2UDb/YCsgBBsVOAdGT2U3lL+IZjA1g+AStYjdoqQ==;EndpointSuffix=core.windows.net",
+    "AzureWebJobsStorage": "",
     "FUNCTIONS_WORKER_RUNTIME": "python",
     "AzureSignalRConnectionString": "Endpoint=https://signalopensky.service.signalr.net;AccessKey=xPgksP3darObBDQJ5/CiL2z8WPYmYUXpJFPiXp0mayo=;Version=1.0;"
   },

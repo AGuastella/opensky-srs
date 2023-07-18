@@ -550,6 +550,19 @@ setTimeout(function(){
 )
 
     }
+
+    function addUserInfo(){
+      const graphsvc="https://graph.microsoft.com/v1.0/me"
+      fetch(graphsvc)
+          .then(response => { return response.json() })
+          .then(res => { 
+            
+            usr = document.getElementById("utente");
+            usr.innerHTML = res;    
+          
+          })
+
+    }
   </script>
 
   <style>
@@ -568,7 +581,7 @@ setTimeout(function(){
   </style>
 </head>
 
-<body onload="GetMap();createSelect();">
+<body onload="GetMap();createSelect();addUserInfo();">
   <div id="load" ></div>
   <div id="cont" style ="visibility: hidden;">
     <a href="https://openskyiu.azurewebsites.net/.auth/logout">SIGNOUT</a>
@@ -579,6 +592,7 @@ setTimeout(function(){
         <td id="myMap"></td>
         <td style="vertical-align: top;">
           <a style="text-align: right;" href="https://openskyiu.azurewebsites.net/.auth/logout?post_logout_redirect_uri=https%3A%2F%2Fgoogle.com">SIGNOUT</a>
+          <div id="utente"></div>
           <br>
           <div id="messages"></div>
           <br>
