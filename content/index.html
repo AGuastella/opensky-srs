@@ -14,8 +14,8 @@
       /*background-size: cover;*/
     }
 
-        /*Departure and Arrivals Table*/
-        .container {
+    /*Departure and Arrivals Table Scroll Window*/
+    .container {
       width: 100%;
       height: 150px;
       overflow: hidden;
@@ -193,9 +193,6 @@
       var arr = document.getElementById("arrivals");
       var dep = document.getElementById("departures");
 
-
-
-
       var timestamp_now = Date.now();
       var timestamp_end = Math.floor(timestamp_now / 1000);
       var timestamp_beg = timestamp_end - 86400;
@@ -351,7 +348,7 @@
             ignorePlacement: true,
             allowOverlap: true,
             size: 0.5,
-            
+
             rotation: ["get", "rotation"],
           },
           filter: ['==', ['geometry-type'], 'Point'] //Only render point data in this layer and not the coordinates of lines.
@@ -375,16 +372,18 @@
         //map.events.add('touchstart', symbolLayer, symbolHovered);
         map.events.add('click', addPath);
 
+        // get and procecess initial flights
         fetch(apiBaseUrl + '/api/flightlist')
           .then(response => { return response.json() })
-          .then(res => { ProcessFlightData(res) 
-           })
-          
+          .then(res => {
+            ProcessFlightData(res)
+          })
+
         StartConnection(connection)
 
         connection.on('newMessage', ProcessFlightData)
 
-        map.events.add('data',caricatutto);
+        map.events.add('data', caricatutto);
 
       });
 
@@ -420,6 +419,8 @@
         newFlightPin.addProperty("geoAltitude", f[14]);
         newFlightPin.addProperty("latitude", f[7]);
         newFlightPin.addProperty("longitude", f[6]);
+        newFlightPin.addProperty("distance", (float(f[18])/1000.0).toFixed(2));
+        newFlightPin.addProperty("co2", (float(f[18])*88*0.285).toFixed(2));
 
 
         planes[f[1]] = newFlightPin;
@@ -455,8 +456,10 @@
 
         }
       }
-      mess = document.getElementById("messages");
-      mess.innerHTML = "<h1>Total distance travelled: &nbsp&nbsp&nbsp " + (flight[len] / 1000.0).toFixed(3) + " Km</h1>";
+      var mess = document.getElementById("messages");
+      var distance = (flight[len] / 1000.0).toFixed(3)
+      mess.innerHTML = "<h1>Distanza Totale percorsa: &nbsp&nbsp&nbsp " + distance + " Km</h1><br>" +
+        "<h1>Quantit&agrave; Totale di CO2 prodotta: &nbsp&nbsp&nbsp " + (distance * 0.285 * 88) + " Kg</h1>";
 
     }
 
@@ -467,18 +470,18 @@
     function symbolHovered(e) {
       //Make sure the event occurred on a shape feature.
       if (e.shapes && e.shapes.length > 0) {
-         setPopupLabel(e.shapes[0].getProperties(), e.shapes[0].getCoordinates())
+        setPopupLabel(e.shapes[0].getProperties(), e.shapes[0].getCoordinates())
 
-         //Open the popup.
+        //Open the popup.
         popup.open(map);
       }
     }
 
-    function setPopupLabel(properties, coordinates){
-        //Update the content and position of the popup.
-        popup.setOptions({
-          //Create the content of the popup.
-          content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
+    function setPopupLabel(properties, coordinates) {
+      //Update the content and position of the popup.
+      popup.setOptions({
+        //Create the content of the popup.
+        content: `<div style="padding:10px;"><b>FLIGHT NUMBER: ${properties.name}</b>
                       <br>Origin Country: ${properties.originCountry}
                       <br>Last position update: ${properties.lastPosUpdate}
                       <br>Last contact: ${properties.lastContact}
@@ -486,11 +489,13 @@
                       <br>Velocity: ${properties.velocity} km/h
                       <br>Vertical Rate: ${properties.verticalRate} km/h
                       <br>Geo Altitude: ${properties.geoAltitude} m
+                      <br>Distance Traveled: ${properties.distance} km
+                      <br>CO2 Issued: ${properties.co2} kg
                       </div>`
-          ,
-          position: coordinates,
-          pixelOffset: [0, -18]
-        });
+        ,
+        position: coordinates,
+        pixelOffset: [0, -18]
+      });
     }
     function StartConnection(connection) {
       console.log('connecting...')
@@ -537,20 +542,20 @@
           datasource.add(feat);
           line_layer = new atlas.layer.LineLayer(datasource);
           map.layers.add(line_layer);
-         
+
         }
       } catch {
       }
     }
-    function caricatutto(){
-setTimeout(function(){
-         document.getElementById('load').style.visibility="hidden";
-         document.getElementById('cont').style.visibility="visible";
-},2500
-)
+    function caricatutto() {
+      setTimeout(function () {
+        document.getElementById('load').style.visibility = "hidden";
+        document.getElementById('cont').style.visibility = "visible";
+      }, 2500
+      )
 
     }
-
+    
     function addUserInfo(){
       const graphsvc="https://graph.microsoft.com/v1.0/me"
       fetch(graphsvc)
@@ -578,6 +583,13 @@ setTimeout(function(){
       width: 50%;
       height: 70%;
     }
+
+    .logo {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
   </style>
 </head>
 
@@ -593,6 +605,7 @@ setTimeout(function(){
         <td style="vertical-align: top;">
           <a style="text-align: right;" href="https://openskyiu.azurewebsites.net/.auth/logout?post_logout_redirect_uri=https%3A%2F%2Fgoogle.com">SIGNOUT</a>
           <div id="utente"></div>
+
           <br>
           <div id="messages"></div>
           <br>
