@@ -2,10 +2,11 @@
   "scriptFile": "__init__.py",
   "bindings": [
     {
-      "name": "nome",
-      "type": "activityTrigger",
-      "direction": "in"
-    } ,
+      "name": "mytimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0/10 * * * * *"
+    },
     {
       "type": "signalR",
       "name": "signalRMessages",

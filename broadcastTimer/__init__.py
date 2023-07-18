@@ -1,22 +1,20 @@
-# This function is not intended to be invoked directly. Instead it will be
-# triggered by an orchestrator function.
-# Before running this sample, please:
-# - create a Durable orchestration function
-# - create a Durable HTTP starter function
-# - add azure-functions-durable to requirements.txt
-# - run pip install -r requirements.txt
+import datetime
+import logging
+
+import azure.functions as func
+
 import json
 import pyodbc
 import pandas as pd
-import azure.functions as func
 from utility.query_statement import query as q
 server = 'openskysrs.database.windows.net'
 database = 'openskydb'
 username = 'CloudSA2b425ff0'
 password = 'colajanni<3'   
 driver= '{ODBC Driver 17 for SQL Server}'
-def main(nome:str,signalRMessages: func.Out[str]) -> str:
-    
+def main(mytimer: func.TimerRequest,signalRMessages: func.Out[str]) -> None:
+    utc_timestamp = datetime.datetime.utcnow().replace(
+        tzinfo=datetime.timezone.utc).isoformat()
     print('STO A FA LA BRODCAST!!!!!!!')
 
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
@@ -32,5 +30,8 @@ def main(nome:str,signalRMessages: func.Out[str]) -> str:
        'target': 'newMessage',
         'arguments': [data]
         }))
-    return "ciao"
+    
+    if mytimer.past_due:
+        logging.info('The timer is past due!')
 
+    logging.info('Python timer trigger function ran at %s', utc_timestamp)
