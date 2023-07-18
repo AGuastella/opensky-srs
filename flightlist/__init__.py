@@ -15,19 +15,20 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     driver= '{ODBC Driver 17 for SQL Server}'
 
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
-
+            data = pd.read_sql(q.select_active_flights,conn).values.tolist()
            
-           data = pd.read_sql(q.select_active_flights,conn).values.tolist()
-           with conn.cursor() as cursor:
-             result_distance=cursor.execute(q.distance_query)
-             distance=result_distance.fetchval()
+            #DA RIMUOVERE
+            '''
+            with conn.cursor() as cursor:
+                result_distance=cursor.execute(q.distance_query)
+                distance=result_distance.fetchval()
+            '''
         
 
     # Replace NaN values with null
     #data_with_null = [[v if not (isinstance(v, float) and math.isnan(v)) else None for v in sublist] for sublist in data]
-
     data_with_null = [[None if (isinstance(v, float) and math.isnan(v)) else v for v in sublist] for sublist in data]
-    data_with_null.append(distance)
+    data_with_null.append(0) # QUA SI PUO' PASSARE SEMPLICEMENTE distance=0
     # Convert data to JSON
     json_data = json.dumps(data_with_null)
 

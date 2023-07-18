@@ -193,9 +193,6 @@
       var arr = document.getElementById("arrivals");
       var dep = document.getElementById("departures");
 
-
-
-
       var timestamp_now = Date.now();
       var timestamp_end = Math.floor(timestamp_now / 1000);
       var timestamp_beg = timestamp_end - 86400;
@@ -375,6 +372,7 @@
         //map.events.add('touchstart', symbolLayer, symbolHovered);
         map.events.add('click', addPath);
 
+        // get and procecess initial flights
         fetch(apiBaseUrl + '/api/flightlist')
           .then(response => { return response.json() })
           .then(res => { ProcessFlightData(res) 
