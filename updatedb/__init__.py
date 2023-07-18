@@ -30,7 +30,8 @@ def main(j: dict) -> str:
     
     on_air = [l for l in list_of_lists if not l[9]]
     on_ground = [[l[1]] for l in list_of_lists if l[9]]
-   
+
+    
     with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password, autocommit=True) as conn:
         with conn.cursor() as cursor:
             cursor.fast_executemany = True
@@ -38,12 +39,14 @@ def main(j: dict) -> str:
             try:
                 # MERGE+INSERT: update delle info dei voli ATTIVI
                 cursor.executemany(q.sql_merge, on_air)
+                print("INSERIMENTO FINITO")
                 cursor.commit()
-            except:
+            except pyodbc.Error as ex:
+                sqlstate = ex.args#[0]
                 print('MERGE NON ANDATA A BUON FINE')
-                print(on_air)
+                print(sqlstate)
+                #print(on_air)
             
-
             if len(on_ground) > 0:
                 # UPDATE voli attivi. Un volo diventa non attivo se:
                 # - passa allo stato unground
@@ -51,19 +54,22 @@ def main(j: dict) -> str:
                 try:
                     cursor.executemany(q.sql_update_to_landed, on_ground)
                     cursor.commit()
-                except:
+                except pyodbc.Error as ex:
+                    sqlstate = ex.args#[0]
                     print('Aggiornamento atterrati non andato a buon fine')
-                    print(on_air)
+                    print(sqlstate)
+                    #print(on_air)
 
             try:
                 cursor.execute(q.sql_update_to_inactive)
                 cursor.commit()
-            except:
+            except pyodbc.Error as ex:
+                sqlstate = ex.args#[0]
                 print('Aggiornamento usciti dallo spazio aereo non andato a buon fine')
-                print(on_air)
-
-
+                print(sqlstate)
+                #print(on_air)
+                
         conn.commit()
-        print("INSERIMENTO FINITO")
+        
         
     return "ok"

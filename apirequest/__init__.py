@@ -31,10 +31,10 @@ def main(nome: str) -> dict:
             rand = random.randint(0, len(oc.opensky_credential)-1)
 
             # RICHIESTA CON CREDENZIALI, A ROTAZIONE
-            #r = requests.get(f'https://opensky-network.org/api/states/all?{bbox}', auth = HTTPBasicAuth(oc.opensky_credential[rand][0], oc.opensky_credential[rand][1]))
+            r = requests.get(f'https://opensky-network.org/api/states/all?{bbox}', auth = HTTPBasicAuth(oc.opensky_credential[rand][0], oc.opensky_credential[rand][1]))
             
             # RICHIESTA CON CREDENZIALI SINGOLE
-            r = requests.get('https://opensky-network.org/api/states/all?{bbox}', auth = HTTPBasicAuth('g1g1', 'dkKIskisiKIKI£443'))
+            #r = requests.get('https://opensky-network.org/api/states/all?{bbox}', auth = HTTPBasicAuth('g1g1', 'dkKIskisiKIKI£443'))
 
             # RICHIESTA SENZA CREDENZIALI
             #r = requests.get('https://opensky-network.org/api/states/all?{bbox}')
