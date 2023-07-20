@@ -7,11 +7,11 @@ import json
 import pyodbc
 import pandas as pd
 from utility.query_statement import query as q
+
 server = 'openskysrs.database.windows.net'
-database = 'openskydb'
-#username = 'CloudSA2b425ff0'
-#password = 'colajanni<3'   
+database = 'openskydb'  
 driver= '{ODBC Driver 17 for SQL Server}'
+
 def main(mytimer: func.TimerRequest,signalRMessages: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()

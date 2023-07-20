@@ -11,10 +11,9 @@ import pyodbc
 from utility.italianairspace import italianairspace as it
 from utility.query_statement import query as q
 import os
+
 server = 'openskysrs.database.windows.net'
 database = 'openskydb'
-#username = 'CloudSA2b425ff0'
-#password = 'colajanni<3'   
 driver= '{ODBC Driver 17 for SQL Server}'
 
 from utility.credential import openskycredential as oc
