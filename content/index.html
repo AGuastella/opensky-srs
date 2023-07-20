@@ -11,9 +11,6 @@
       position: fixed;
       z-index: 9999;
       background: url("https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca_w200.gif") no-repeat center center rgba(0, 0, 0, 0.25);
-
-      /*background: url("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921") no-repeat center center rgba(0, 0, 0, 0.25);*/
-      /*background-size: cover;*/
     }
 
     /*Departure and Arrivals Table Scroll Window*/
@@ -33,7 +30,7 @@
       margin-bottom: 20px;
     }
   </style>
-  <!-- SCRIPT AGGIUNTO DA MICHELE-->
+
   <script>
     const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
     var formatter = new Intl.DateTimeFormat('it-IT', options);
@@ -260,7 +257,6 @@
         row.appendChild(cell);
 
         cell = document.createElement("td");
-        //date.getDay()+"/"+date.getMonth()+"/"+ date.getFullYear()+"\n"+date.getHours()+":"+date.getMinutes()
         cellText = document.createTextNode(formatter.format(new Date(json[j].firstSeen * 1000)));
         cell.appendChild(cellText);
         row.appendChild(cell);
@@ -356,7 +352,6 @@
 
 
 
-        //let messages = document.querySelector('#messages');
         const apiBaseUrl = window.location.origin;
         const connection = new signalR.HubConnectionBuilder()
           .withUrl(apiBaseUrl + '/api')
@@ -418,8 +413,8 @@
         newFlightPin.addProperty("geoAltitude", f[14]);
         newFlightPin.addProperty("latitude", f[7]);
         newFlightPin.addProperty("longitude", f[6]);
-        newFlightPin.addProperty("distance", (parseFloat(f[18]) / 1000.0).toFixed(2).toLocaleString('it'));
-        newFlightPin.addProperty("co2", (parseFloat(f[18])*88*0.285).toFixed(2).toLocaleString('it'));
+        newFlightPin.addProperty("distance", (parseFloat(f[18]) / 1000.0).toFixed(2));
+        newFlightPin.addProperty("co2", (parseFloat(f[18]) * 88 * 0.285).toFixed(2));
 
 
         planes[f[1]] = newFlightPin;
@@ -449,22 +444,18 @@
             painted = ''
             path = []
             if (popup.isOpen()) {
-              closePopup()
+              closePopup();
             }
           }
 
         }
       }
-      /*var mess = document.getElementById("messages");
-      var distance = (flight[len] / 1000.0).toFixed(3)
-      mess.innerHTML = "<h2>Distanza Totale percorsa: &nbsp&nbsp&nbsp " + distance + " Km</h1><br>" +
-        "<h2>Quantit&agrave; Totale di CO2 prodotta: &nbsp&nbsp&nbsp " + (distance * 0.285 * 88) + " Kg</h2>";*/
 
-      var distance = (flight[len] / 1000.0).toFixed(2).toLocaleString('it') 
-      var co2em = (distance * 0.285 * 88).toFixed(2).toLocaleString('it')
+      var distance = (flight[len] / 1000.0).toFixed(2);
+      var co2em = (distance * 0.285 * 88).toFixed(2);
       var labelDist = document.getElementById("distance");
       var labelCO2 = document.getElementById("co2");
-      labelDist.innerHTML = "" + distance+ " Km";
+      labelDist.innerHTML = "" + distance + " Km";
       labelCO2.innerHTML = "" + co2em + " Kg";
     }
 
@@ -561,7 +552,22 @@
 
     }
 
+    function addUserInfo() {
 
+      const graphsvc = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+      fetch(graphsvc, {
+        credentials: "include",
+        mode: 'no-cors'
+      })
+        .then(response => { return response.json() })
+        .then(res => {
+
+          usr = document.getElementById("utente");
+          usr.innerHTML = res;
+
+        })
+
+    }
   </script>
 
   <style>
@@ -626,10 +632,9 @@
   </style>
 </head>
 
-<body onload="GetMap();createSelect();">
+<body onload="GetMap();createSelect();addUserInfo();">
   <div id="load"></div>
   <div id="cont" style="visibility: hidden;">
-    <!--a href="https://openskyiu.azurewebsites.net/.auth/logout">SIGNOUT</a>-->
     <table id="maintable" width="100%" height="auto">
       <tbody>
         <tr>
@@ -639,7 +644,6 @@
               <tbody>
                 <tr>
                   <td class="ligthtd" width="90%" height="80px">
-                    <!--<iframe src="https://liveunibo-my.sharepoint.com/personal/michele_colonna3_studio_unibo_it/_layouts/15/embed.aspx?UniqueId=299b26a2-38b3-4c6f-8eaa-5058bb92ad01" width="auto" height="100%" frameborder="0" scrolling="no" allowfullscreen title="logo_hor_tr.png" alt="logo" class="logo"></iframe>-->
                     <img src="https://srs2023stug4af18.blob.core.windows.net/blobimg/logo_hor_tr.png" alt="logo"
                       class="logo" style="max-height:100%; width:auto;" />
                   </td>
@@ -648,9 +652,6 @@
                     <form action="https://srs-onthesky-zona2.azurewebsites.net/.auth/logout">
                       <input type="submit" value="Sign Out" />
                     </form>
-                    <!--<a style="text-align: center;"
-                      href="https://srs-onthesky-zona2.azurewebsites.net/.auth/logout">SIGNOUT</a>-->
-
                     <div id="utente"></div>
 
                   </td>
@@ -669,7 +670,6 @@
                 </tr>
                 <tr style="text-align:center; height: 40px;">
                   <td class="ligthtd" width="50%" id="distance">
-                    <!--<div id="messages" ></div>-->
                   </td>
                   <td class="ligthtd" width="50%" id="co2"></td>
                 </tr>
@@ -683,7 +683,6 @@
                     <br>
                     <br>
                     <select style="width:100%; font-size: 15px;" id="listAirports" onchange="userAction()"></select>
-                    <!--<button type="button" onclick="userAction()">Search</button>-->
                   </td>
                 </tr>
                 <tr>

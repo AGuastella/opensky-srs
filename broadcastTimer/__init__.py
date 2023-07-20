@@ -9,7 +9,7 @@ import pandas as pd
 from utility.query_statement import query as q
 
 server = 'openskysrs.database.windows.net'
-database = 'openskydb'  
+database = 'openskydb'
 driver= '{ODBC Driver 17 for SQL Server}'
 
 def main(mytimer: func.TimerRequest,signalRMessages: func.Out[str]) -> None:

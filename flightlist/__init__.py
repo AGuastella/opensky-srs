@@ -8,11 +8,11 @@ import os
 from utility.query_statement import query as q
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    
-    server = 'openskysrs.database.windows.net'
-    database = 'openskydb'
-    driver= '{ODBC Driver 17 for SQL Server}'
 
+    server = 'openskysrs.database.windows.net'
+    database = 'openskydb' 
+    driver= '{ODBC Driver 17 for SQL Server}'
+    
     try:
         username=os.getenv('Dbuser')
         password=os.getenv('Dbpass')

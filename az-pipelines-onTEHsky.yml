@@ -11,7 +11,7 @@ variables:
   azureSubscription: '0e8dfb76-cbc0-437e-b0a1-4cedd9813350'
 
   # Function app name
-  functionAppName: 'srs-ontehsky-zona2'
+  functionAppName: 'srs-ontehsky'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'

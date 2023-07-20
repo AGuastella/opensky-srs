@@ -13,7 +13,7 @@ from utility.query_statement import query as q
 import os
 
 server = 'openskysrs.database.windows.net'
-database = 'openskydb'
+database = 'openskydb' 
 driver= '{ODBC Driver 17 for SQL Server}'
 
 from utility.credential import openskycredential as oc
