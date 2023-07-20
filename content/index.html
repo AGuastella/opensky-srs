@@ -2,6 +2,8 @@
 <html>
 
 <head>
+  <link rel="icon" type="image/x-icon" href="https://srs2023stug4af18.blob.core.windows.net/blobimg/favicon.ico">
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
   <style>
     #load {
       width: 100%;
@@ -24,7 +26,7 @@
     .scrolling-div {
       padding: 10px;
       height: 100%;
-      overflow: auto;
+      overflow: scroll;
     }
 
     .scrolling-div p {
@@ -175,7 +177,7 @@
     ['LIVV', 'Aviosuperficie Moncucco', 'Cascina Moncucco', 'Torino', 'TO']]
 
     function createSelect() {
-      const la = document.getElementById("listAirports");
+      var la = document.getElementById("listAirports");
       for (i = 0; i < airports.length; i++) {
         let option = document.createElement("option");
         option.setAttribute('value', airports[i][0]);
@@ -184,10 +186,16 @@
         option.appendChild(optionText);
         la.appendChild(option);
       }
+      la.selectedIndex = 93
+      userAction();
     }
 
     const userAction = async () => {
-      clear();
+      document.getElementById("title_ar").innerHTML = "";
+      document.getElementById("title_de").innerHTML = "";
+      document.getElementById("arrivals").innerHTML = "";
+      document.getElementById("departures").innerHTML = "";
+
       var title_ar = document.getElementById("title_ar");
       var title_de = document.getElementById("title_de");
       var arr = document.getElementById("arrivals");
@@ -209,13 +217,13 @@
       const myJson1 = await response1.json(); //extract JSON from the http response
 
       // do something with myJson
-      const para = document.createElement("h2");
-      const node = document.createTextNode("Arrivals");
+      const para = document.createElement("h3");
+      const node = document.createTextNode("Arrivi");
       para.appendChild(node);
       title_ar.appendChild(para)
 
-      const para2 = document.createElement("h2");
-      const node2 = document.createTextNode("Departures");
+      const para2 = document.createElement("h3");
+      const node2 = document.createTextNode("Partenze");
       para2.appendChild(node2);
       title_de.appendChild(para2)
 
@@ -224,23 +232,13 @@
 
     }
 
-    function clear() {
-      var title_ar = document.getElementById("title_ar");
-      var title_de = document.getElementById("title_de");
-      var arr = document.getElementById("arrivals");
-      var dep = document.getElementById("departures");
-      arr.textContent = ""
-      dep.textContent = ""
-      title_ar.textContent = ""
-      title_de.textContent = ""
-    }
 
     function tableCreate(json, div) {
       // create elements <table> and a <tbody>
       var tbl = document.createElement("table");
       var tblBody = document.createElement("tbody");
 
-      const objectKeys = ["ICAO24", "Est. Departure", "Est. Depart. Airport", "Est. Arrival", "Est. Arriv. Airport", "Callsign"]
+      const objectKeys = ["ICAO24", "Ora Partenza Stimato", "Aeroporto Partenza Stimato", "Ora Arrivo Stimato", "Aeroporto Arrivo Stimato", "Codice volo"]
 
       var row = document.createElement("tr");
       for (var i = 0; i < objectKeys.length; i++) {
@@ -297,6 +295,7 @@
       div.appendChild(tbl);
       // tbl border attribute to 
       tbl.setAttribute("border", "2");
+      tbl.setAttribute("width", "100%")
     }
 
 
@@ -327,8 +326,8 @@
           subscriptionKey: "2Xi2YAbxLSzp83ZIc_JDsxqxJ_FQsuIhV0MLlVkEOA0",
         },
         style: "night",
-        center: [12.56738, 41.87194],
-        zoom: 5
+        center: [12.57250, 42.00417],
+        zoom: 4.8
 
       });
 
@@ -419,8 +418,8 @@
         newFlightPin.addProperty("geoAltitude", f[14]);
         newFlightPin.addProperty("latitude", f[7]);
         newFlightPin.addProperty("longitude", f[6]);
-        newFlightPin.addProperty("distance", (parseFloat(f[18]) / 1000.0).toFixed(2));
-        newFlightPin.addProperty("co2", (parseFloat(f[18]) * 88 * 0.285).toFixed(2));
+        newFlightPin.addProperty("distance", (parseFloat(f[18]) / 1000.0).toFixed(2).toLocaleString('it'));
+        newFlightPin.addProperty("co2", (parseFloat(f[18])*88*0.285).toFixed(2).toLocaleString('it'));
 
 
         planes[f[1]] = newFlightPin;
@@ -456,11 +455,17 @@
 
         }
       }
-      var mess = document.getElementById("messages");
+      /*var mess = document.getElementById("messages");
       var distance = (flight[len] / 1000.0).toFixed(3)
-      mess.innerHTML = "<h1>Distanza Totale percorsa: &nbsp&nbsp&nbsp " + distance + " Km</h1><br>" +
-        "<h1>Quantit&agrave; Totale di CO2 prodotta: &nbsp&nbsp&nbsp " + (distance * 0.285 * 88) + " Kg</h1>";
+      mess.innerHTML = "<h2>Distanza Totale percorsa: &nbsp&nbsp&nbsp " + distance + " Km</h1><br>" +
+        "<h2>Quantit&agrave; Totale di CO2 prodotta: &nbsp&nbsp&nbsp " + (distance * 0.285 * 88) + " Kg</h2>";*/
 
+      var distance = (flight[len] / 1000.0).toFixed(2).toLocaleString('it') 
+      var co2em = (distance * 0.285 * 88).toFixed(2).toLocaleString('it')
+      var labelDist = document.getElementById("distance");
+      var labelCO2 = document.getElementById("co2");
+      labelDist.innerHTML = "" + distance+ " Km";
+      labelCO2.innerHTML = "" + co2em + " Kg";
     }
 
     function closePopup() {
@@ -490,7 +495,7 @@
                       <br>Vertical Rate: ${properties.verticalRate} km/h
                       <br>Geo Altitude: ${properties.geoAltitude} m
                       <br>Distance Traveled: ${properties.distance} km
-                      <br>CO2 Issued: ${properties.co2} kg
+                      <br>CO2 Emissions: ${properties.co2} kg
                       </div>`
         ,
         position: coordinates,
@@ -556,23 +561,15 @@
 
     }
 
-    function addUserInfo() {
-      const graphsvc = "https://graph.microsoft.com/v1.0/me"
-      fetch(graphsvc)
-        .then(response => { return response.json() })
-        .then(res => {
 
-          usr = document.getElementById("utente");
-          usr.innerHTML = res;
-
-        })
-
-    }
   </script>
 
   <style>
     html,
     body {
+      font-family: 'Montserrat';
+      background-color: gray;
+      color: white;
       width: 100%;
       height: 100%;
       padding: 0;
@@ -580,8 +577,9 @@
     }
 
     #myMap {
-      width: 50%;
-      height: 70%;
+      width: 100%;
+      height: 100%;
+      color: black;
     }
 
     .logo {
@@ -590,57 +588,133 @@
       margin-right: auto;
       width: 50%;
     }
+
+    .maintable table,
+    tr,
+    td {
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid;
+      border-color: white;
+      border-width: 2px;
+      vertical-align: top;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      padding: 0px 3px;
+      margin: 5px 0 2px;
+    }
+
+    .ligthtd {
+      background-color: lightgray;
+      color: black;
+    }
+
+
+    #arrivals td,
+    #departures td {
+      border-color: gray;
+      background-color: whitesmoke;
+
+      color: black;
+      text-align: center;
+    }
   </style>
 </head>
 
-<body onload="GetMap();createSelect();/*addUserInfo();*/">
+<body onload="GetMap();createSelect();">
   <div id="load"></div>
   <div id="cont" style="visibility: hidden;">
     <!--a href="https://openskyiu.azurewebsites.net/.auth/logout">SIGNOUT</a>-->
-
-    <table>
+    <table id="maintable" width="100%" height="auto">
       <tbody>
-        <tr height="600">
-          <td id="myMap"></td>
-          <td style="vertical-align: top;">
-            <img
-              src="https://dev.azure.com/srs-opensky/51b05b5e-e43a-4f04-94ce-fc4cae601d3c/_apis/git/repositories/ecb0217f-0a20-4c2f-87b7-eba404442da1/items?path=/content/logo_hor_tr.png&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=main&resolveLfs=true&%24format=octetStream&api-version=5.0"
-              alt="logo" class="logo" />
-            <br>
-            <a style="text-align: right;"
-              href="https://openskyiu.azurewebsites.net/.auth/logout?post_logout_redirect_uri=https%3A%2F%2Fgoogle.com">SIGNOUT</a>
-            <div id="utente"></div>
-
-            <br>
-            <div id="messages"></div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <br>
-    <h1>Airports Events</h1>
-            <select id="listAirports" onchange="userAction()"></select>
-            <!--<button type="button" onclick="userAction()">Search</button>-->
-            <table>
+        <tr>
+          <td id="myMap" style="position:relative;width:45%;height:100%;"></td>
+          <td style="vertical-align: top;" width="55%">
+            <table width="100%">
               <tbody>
                 <tr>
-                  <td id="title_de" width="1400">
+                  <td class="ligthtd" width="90%" height="80px">
+                    <!--<iframe src="https://liveunibo-my.sharepoint.com/personal/michele_colonna3_studio_unibo_it/_layouts/15/embed.aspx?UniqueId=299b26a2-38b3-4c6f-8eaa-5058bb92ad01" width="auto" height="100%" frameborder="0" scrolling="no" allowfullscreen title="logo_hor_tr.png" alt="logo" class="logo"></iframe>-->
+                    <img src="https://srs2023stug4af18.blob.core.windows.net/blobimg/logo_hor_tr.png" alt="logo"
+                      class="logo" style="max-height:100%; width:auto;" />
                   </td>
-                  <td id="title_ar" width="1400">
+                  <td class="ligthtd" width="10%"
+                    style="align-content: center; text-align: center; vertical-align: middle;">
+                    <form action="https://srs-onthesky-zona2.azurewebsites.net/.auth/logout">
+                      <input type="submit" value="Sign Out" />
+                    </form>
+                    <!--<a style="text-align: center;"
+                      href="https://srs-onthesky-zona2.azurewebsites.net/.auth/logout">SIGNOUT</a>-->
+
+                    <div id="utente"></div>
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table width="100%">
+              <tbody>
+                <tr style="text-align:center; vertical-align: top;">
+                  <td width="50%" height="5px" style="border: none;">
+                    <h3>Distanza totale percorsa</h3>
+                  </td>
+                  <td width="50%" height="5px" style="border: none;">
+                    <h3>Consumo totale di CO2</h3>
+                  </td>
+                </tr>
+                <tr style="text-align:center; height: 40px;">
+                  <td class="ligthtd" width="50%" id="distance">
+                    <!--<div id="messages" ></div>-->
+                  </td>
+                  <td class="ligthtd" width="50%" id="co2"></td>
+                </tr>
+              </tbody>
+            </table>
+            <table width="100%">
+              <tbody>
+                <tr style="line-height: 5pt; vertical-align: top;">
+                  <td style=" border: none;">
+                    <h2 style="text-align: center;">Eventi Aeroporti</h2>
+                    <br>
+                    <br>
+                    <select style="width:100%; font-size: 15px;" id="listAirports" onchange="userAction()"></select>
+                    <!--<button type="button" onclick="userAction()">Search</button>-->
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td id="title_de"
+                    style="border: none; line-height: 5pt; height: 20px; max-height: 20px; vertical-align: center;">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="ligthtd">
                     <div class="container">
-                      <div id="departures" width="1400" style="vertical-align: top;" class="scrolling-div">
-                      </div>
-                    </div>
-                  <td>
-                    <div class="container">
-                      <div id="arrivals" width="1400" style="vertical-align: top;" class="scrolling-div">
+                      <div id="departures" class="scrolling-div">
                       </div>
                     </div>
                   </td>
+                </tr>
+                <tr>
+                  <td id="title_ar"
+                    style="border: none; line-height: 5pt; height: 20px; max-height: 20px; vertical-align: center;">
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="ligthtd">
+                    <div class="container">
+                      <div id="arrivals" style="vertical-align: top;" class="scrolling-div">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </td>
         </tr>
       </tbody>
